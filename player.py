@@ -6,6 +6,7 @@ class LLMPlayer:
     def __init__(self, name: str):
         self.name = name
         self.card: int = None
+        self.wait_time: float = 0
 
     def receive_card(self, card: int):
         self.card = card
@@ -31,16 +32,16 @@ class LLMPlayer:
         decision = response.choices[0].message["content"].strip()
 
         try:
-            wait_time = float(decision)
+            self.wait_time = float(decision)
         except ValueError:
-            wait_time = random.uniform(
+            self.wait_time = random.uniform(
                 1, 5
             )  # Default wait time if parsing fails
 
         # Add a small random factor to the wait time to handle ties
-        wait_time += random.uniform(0, 0.1)
+        self.wait_time += random.uniform(0, 0.1)
 
-        return wait_time, prompt, decision
+        return self.wait_time, prompt, decision
 
     def _create_prompt(self, game_state: dict) -> str:
         moves_description = "\n".join(
@@ -54,10 +55,9 @@ class LLMPlayer:
         Current game state:
         - Your name: {self.name}
         - Your card: {self.card}
-        - Current level: {game_state['current_level']}
-        - Time passed in this level: {game_state['time_passed']:.1f} seconds
+        - Time passed in this game: {game_state['time_passed']:.1f} seconds
         - Players left with cards: {game_state['players_with_cards']}
-        - Moves made this level:
+        - Moves made this game:
         {moves_description}
 
         Decide how long to wait from this moment before playing your card ({self.card}).
