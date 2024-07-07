@@ -1,23 +1,29 @@
 import streamlit as st
 
 
-def display_game(game_result, llm_logs):
-    success, round_data, unplayed_cards = game_result
+def display_game(game_result: Tuple[bool, List[Dict], List[Tuple[str, int]]]):
+    success, moves, unplayed_cards = game_result
 
     st.subheader("The Mind Game - LLM Edition")
 
-    if round_data:
-        wait_time, card, player_name = round_data[0]
-        st.write(f"{wait_time:.1f}: {player_name} plays their {card} card")
+    for move in moves:
+        st.write(
+            f"{move['time']:.1f}: {move['player']} plays their {move['card']} card"
+        )
 
-    st.error("GAME OVER")
+    if not success:
+        st.error("GAME OVER")
 
     st.write("Cards in play:")
-    all_cards = [(p, c) for _, c, p in round_data] + unplayed_cards
+    all_cards = [
+        (move["player"], move["card"]) for move in moves
+    ] + unplayed_cards
     all_cards.sort(key=lambda x: x[1])  # Sort by card value
     for player_name, card in all_cards:
         st.write(f"{player_name} had a {card}")
 
+
+def display_logs(llm_logs):
     with st.expander("View LLM Logs"):
         for player_name, prompt, decision in llm_logs:
             st.text(f"LLM Call for {player_name}:")
