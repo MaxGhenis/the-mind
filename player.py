@@ -5,7 +5,6 @@ from display import display_game, display_logs
 from name_generator import generate_fun_name
 
 # Set up your OpenAI API key using Streamlit secrets
-openai.api_key = st.secrets["OPENAI_KEY"]
 
 
 def main():

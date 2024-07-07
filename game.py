@@ -1,6 +1,8 @@
 import random
 from typing import List, Dict, Tuple
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 
 
 class LLMPlayer:
@@ -14,17 +16,15 @@ class LLMPlayer:
     def decide_action(self, game_state: dict) -> float:
         prompt = self._create_prompt(game_state)
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an AI playing a simplified version of 'The Mind' card game. Respond with only a number representing seconds to wait.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-        )
-        decision = response.choices[0].message["content"].strip()
+        response = client.chat.completions.create(model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an AI playing a simplified version of 'The Mind' card game. Respond with only a number representing seconds to wait.",
+            },
+            {"role": "user", "content": prompt},
+        ])
+        decision = response.choices[0].message.content.strip()
 
         try:
             wait_time = float(decision)
