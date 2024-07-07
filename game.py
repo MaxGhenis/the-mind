@@ -1,71 +1,123 @@
 import random
-from typing import List, Tuple
-from player import LLMPlayer
-from utils import generate_fun_name
+from typing import List, Dict, Tuple
+import openai
+
+
+class LLMPlayer:
+    def __init__(self, name: str):
+        self.name = name
+        self.card: int = None
+
+    def receive_card(self, card: int):
+        self.card = card
+
+    def decide_action(self, game_state: dict) -> float:
+        prompt = self._create_prompt(game_state)
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an AI playing a simplified version of 'The Mind' card game. Respond with only a number representing seconds to wait.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
+        decision = response.choices[0].message["content"].strip()
+
+        try:
+            wait_time = float(decision)
+        except ValueError:
+            wait_time = random.uniform(
+                1, 5
+            )  # Default wait time if parsing fails
+
+        return wait_time
+
+    def _create_prompt(self, game_state: dict) -> str:
+        moves_description = "\n".join(
+            [
+                f"- At {move['time']:.1f} seconds: {move['player']} played {move['card']}"
+                for move in game_state["moves"]
+            ]
+        )
+        return f"""
+        You are playing a simplified version of 'The Mind' card game. Your goal is to play cards in ascending order without communicating.
+        Current game state:
+        - Your name: {self.name}
+        - Your card: {self.card}
+        - Time passed in this game: {game_state['time_passed']:.1f} seconds
+        - Players left with cards: {game_state['players_with_cards']}
+        - Moves made this game:
+        {moves_description}
+
+        Decide how long to wait from this moment before playing your card ({self.card}).
+        Respond with only a single number representing the number of seconds to wait (e.g., '3.5').
+        """
 
 
 class TheMindGame:
-    def __init__(self, num_players: int):
-        self.players = self._create_unique_players(num_players)
-        self.played_cards: List[int] = []
-        self.start_time = 0
-        self.llm_logs = []
-
-    def _create_unique_players(self, num_players: int) -> List[LLMPlayer]:
-        names = set()
-        players = []
-        for _ in range(num_players):
-            while True:
-                name = generate_fun_name()
-                if name not in names:
-                    names.add(name)
-                    players.append(LLMPlayer(name))
-                    break
-        return players
+    def __init__(self, player_names: List[str]):
+        self.players = [LLMPlayer(name) for name in player_names]
+        self.played_cards: List[Dict] = []
+        self.time_passed: float = 0
 
     def setup_game(self):
         cards = random.sample(range(1, 101), len(self.players))
-        self.played_cards = []
-        self.start_time = 0
-
         for player, card in zip(self.players, cards):
             player.receive_card(card)
 
-    def play_game(
-        self,
-    ) -> Tuple[bool, List[Tuple[float, int, str]], List[Tuple[str, int]]]:
+    def play_game(self) -> Tuple[bool, List[Dict], List[Tuple[str, int]]]:
         self.setup_game()
-        players_ready = self.players.copy()
-        cards_played_this_game = []
-        time_passed = 0
+        players_left = self.players.copy()
 
-        # Get initial decisions from all players
-        for player in players_ready:
+        while players_left:
             game_state = {
-                "time_passed": time_passed,
-                "players_with_cards": len(players_ready),
-                "moves": cards_played_this_game,
+                "time_passed": self.time_passed,
+                "players_with_cards": len(players_left),
+                "moves": self.played_cards,
             }
-            wait_time, prompt, decision = player.decide_action(game_state)
-            self.llm_logs.append((player.name, prompt, decision))
 
-        # Sort players by their wait times
-        players_ready.sort(key=lambda p: p.wait_time)
+            actions = [
+                (player, player.decide_action(game_state))
+                for player in players_left
+            ]
+            actions.sort(key=lambda x: x[1])  # Sort by wait time
 
-        for i, player in enumerate(players_ready):
-            time_passed += player.wait_time
-            card = player.play_card()
-            cards_played_this_game.append((time_passed, card, player.name))
+            player, wait_time = actions[0]
+            self.time_passed += wait_time
 
-            if self.played_cards and card < max(self.played_cards):
+            if (
+                self.played_cards
+                and player.card < self.played_cards[-1]["card"]
+            ):
                 unplayed_cards = [
-                    (p.name, p.card) for p in players_ready[i + 1 :]
+                    (p.name, p.card) for p in players_left if p != player
                 ]
-                return False, cards_played_this_game, unplayed_cards
+                return (
+                    False,
+                    self.played_cards
+                    + [
+                        {
+                            "time": self.time_passed,
+                            "player": player.name,
+                            "card": player.card,
+                        }
+                    ],
+                    unplayed_cards,
+                )
 
-            self.played_cards.append(card)
+            self.played_cards.append(
+                {
+                    "time": self.time_passed,
+                    "player": player.name,
+                    "card": player.card,
+                }
+            )
+            players_left.remove(player)
 
             if len(self.played_cards) == len(self.players) - 1:
                 break
 
-        return True, cards_played_this_game, []
+        return True, self.played_cards, []
