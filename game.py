@@ -1,29 +1,30 @@
-import random
 from typing import List, Dict, Tuple
 from openai import OpenAI
-
-client = OpenAI()
+import random
 
 
 class LLMPlayer:
-    def __init__(self, name: str):
+    def __init__(self, name: str, client: OpenAI):
         self.name = name
         self.card: int = None
+        self.client = client
 
     def receive_card(self, card: int):
         self.card = card
 
-    def decide_action(self, game_state: dict) -> float:
+    def decide_action(self, game_state: dict) -> Tuple[float, str, str]:
         prompt = self._create_prompt(game_state)
 
-        response = client.chat.completions.create(model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are an AI playing a simplified version of 'The Mind' card game. Respond with only a number representing seconds to wait.",
-            },
-            {"role": "user", "content": prompt},
-        ])
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an AI playing a simplified version of 'The Mind' card game. Respond with only a number representing seconds to wait.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
         decision = response.choices[0].message.content.strip()
 
         try:
@@ -33,7 +34,7 @@ class LLMPlayer:
                 1, 5
             )  # Default wait time if parsing fails
 
-        return wait_time
+        return wait_time, prompt, decision
 
     def _create_prompt(self, game_state: dict) -> str:
         moves_description = "\n".join(
@@ -58,19 +59,36 @@ class LLMPlayer:
 
 
 class TheMindGame:
-    def __init__(self, player_names: List[str]):
-        self.players = [LLMPlayer(name) for name in player_names]
+    def __init__(self, player_names: List[str], client: OpenAI):
+        self.players = [LLMPlayer(name, client) for name in player_names]
         self.played_cards: List[Dict] = []
         self.time_passed: float = 0
+        self.llm_logs: List[Tuple[str, str, str]] = []
+        self.debug_logs: List[str] = []
+
+    def log(self, message: str):
+        self.debug_logs.append(message)
 
     def setup_game(self):
         cards = random.sample(range(1, 101), len(self.players))
         for player, card in zip(self.players, cards):
             player.receive_card(card)
+        self.log(
+            f"Initial game state: {[(p.name, p.card) for p in self.players]}"
+        )
 
-    def play_game(self) -> Tuple[bool, List[Dict], List[Tuple[str, int]]]:
+    def play_game(
+        self,
+    ) -> Tuple[
+        Tuple[bool, List[Dict], List[Tuple[str, int]]],
+        List[Tuple[str, str, str]],
+        List[str],
+    ]:
         self.setup_game()
-        players_left = self.players.copy()
+        players_left = sorted(self.players, key=lambda p: p.card)
+        self.log(
+            f"Players sorted by card value: {[(p.name, p.card) for p in players_left]}"
+        )
 
         while players_left:
             game_state = {
@@ -78,34 +96,47 @@ class TheMindGame:
                 "players_with_cards": len(players_left),
                 "moves": self.played_cards,
             }
+            self.log(f"Current game state: {game_state}")
 
-            actions = [
-                (player, player.decide_action(game_state))
-                for player in players_left
-            ]
+            actions = []
+            for player in players_left:
+                wait_time, prompt, decision = player.decide_action(game_state)
+                actions.append((player, wait_time))
+                self.llm_logs.append((player.name, prompt, decision))
+                self.log(f"{player.name} decided to wait {wait_time} seconds")
+
             actions.sort(key=lambda x: x[1])  # Sort by wait time
+            self.log(f"Sorted actions: {[(a[0].name, a[1]) for a in actions]}")
 
             player, wait_time = actions[0]
             self.time_passed += wait_time
+            self.log(
+                f"Player {player.name} is playing card {player.card} at time {self.time_passed:.1f}"
+            )
 
-            if (
-                self.played_cards
-                and player.card < self.played_cards[-1]["card"]
-            ):
+            # Check if the card being played is the lowest card left
+            if player.card != min(p.card for p in players_left):
                 unplayed_cards = [
                     (p.name, p.card) for p in players_left if p != player
                 ]
+                self.log(
+                    f"Game over. Card {player.card} played out of order. Unplayed cards: {unplayed_cards}"
+                )
                 return (
-                    False,
-                    self.played_cards
-                    + [
-                        {
-                            "time": self.time_passed,
-                            "player": player.name,
-                            "card": player.card,
-                        }
-                    ],
-                    unplayed_cards,
+                    (
+                        False,
+                        self.played_cards
+                        + [
+                            {
+                                "time": self.time_passed,
+                                "player": player.name,
+                                "card": player.card,
+                            }
+                        ],
+                        unplayed_cards,
+                    ),
+                    self.llm_logs,
+                    self.debug_logs,
                 )
 
             self.played_cards.append(
@@ -117,7 +148,26 @@ class TheMindGame:
             )
             players_left.remove(player)
 
+            self.log(
+                f"Current game state: Played cards: {self.played_cards}, Players left: {[(p.name, p.card) for p in players_left]}"
+            )
+
             if len(self.played_cards) == len(self.players) - 1:
+                self.log(
+                    f"Round completed successfully. Last card: {players_left[0].name}: {players_left[0].card}"
+                )
                 break
 
-        return True, self.played_cards, []
+        return (
+            (
+                True,
+                self.played_cards,
+                (
+                    [(players_left[0].name, players_left[0].card)]
+                    if players_left
+                    else []
+                ),
+            ),
+            self.llm_logs,
+            self.debug_logs,
+        )
