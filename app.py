@@ -47,13 +47,42 @@ def display_game(game_result, llm_logs, debug_logs):
 def main():
     st.title("The Mind Game - LLM Edition")
 
-    num_players = st.sidebar.slider("Number of Players", 2, 5, 3)
+    # Add a subtitle describing the game
+    st.markdown(
+        """
+    <p style="font-size: 1.2em; font-style: italic; margin-bottom: 20px;">
+    A cooperative card game where players must play cards in ascending order without communicating. 
+    Can AI agents learn to play together?
+    </p>
+    """,
+        unsafe_allow_html=True,
+    )
 
-    if st.sidebar.button("Start New Game"):
-        player_names = [generate_fun_name() for _ in range(num_players)]
-        game = TheMindGame(player_names, client)
-        game_result, llm_logs, debug_logs = game.play_game()
-        display_game(game_result, llm_logs, debug_logs)
+    # Create a row of buttons for different player counts
+    st.write("Choose the number of AI players:")
+    cols = st.columns(5)
+    for i, col in enumerate(cols, start=2):
+        if col.button(f"{i} Players"):
+            player_names = [generate_fun_name() for _ in range(i)]
+            game = TheMindGame(player_names, client)
+            game_result, llm_logs, debug_logs = game.play_game()
+            display_game(game_result, llm_logs, debug_logs)
+
+    # Add some space before the credits
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # Credits at the bottom of the main panel
+    st.markdown(
+        """
+    <div style="font-size: 0.8em; border-top: 1px solid #e6e6e6; padding-top: 10px;">
+    Created by <a href='mailto:mghenis@gmail.com'>Max Ghenis</a> with 
+    <a href='https://streamlit.io'>Streamlit</a>, 
+    <a href='https://claude.ai'>Claude</a> 3.5 Sonnet, and the 
+    <a href='https://openai.com'>OpenAI</a> GPT-3.5 API
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
