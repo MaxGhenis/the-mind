@@ -45,6 +45,14 @@ class LLMPlayer:
         )
         return f"""
         You are playing a simplified version of 'The Mind' card game. Your goal is to play cards in ascending order without communicating.
+        
+        Key rules and strategy:
+        1. Cards must be played in ascending order.
+        2. You should try to play your card after players with lower numbers have played theirs.
+        3. You should try to play your card before players with higher numbers play theirs.
+        4. Generally, if you have a higher card, you should wait longer before playing.
+        5. Use the information about cards already played and time passed to estimate when to play your card.
+
         Current game state:
         - Your name: {self.name}
         - Your card: {self.card}
@@ -53,7 +61,7 @@ class LLMPlayer:
         - Moves made this game:
         {moves_description}
 
-        Decide how long to wait from this moment before playing your card ({self.card}).
+        Based on this information and the game rules, decide how long to wait from this moment before playing your card ({self.card}).
         Respond with only a single number representing the number of seconds to wait (e.g., '3.5').
         """
 
