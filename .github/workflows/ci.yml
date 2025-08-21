@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev,analysis]"
+    
+    - name: Run linting
+      run: |
+        black --check themind tests
+        ruff check themind tests
+    
+    - name: Run type checking
+      run: |
+        mypy themind
+    
+    - name: Run tests
+      run: |
+        pytest tests/ --cov=themind --cov-report=xml --cov-report=term
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+
+  test-react:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: visualization/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: ./visualization
+      run: npm ci
+    
+    - name: Run tests
+      working-directory: ./visualization
+      run: npm test -- --watchAll=false
+    
+    - name: Build
+      working-directory: ./visualization
+      run: npm run build
+
+  deploy-docs:
+    needs: [test-python, test-react]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -e ".[paper]"
+    
+    - name: Build Jupyter Book
+      run: |
+        jupyter-book build paper/
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./paper/_build/html
+        cname: themind-research.github.io

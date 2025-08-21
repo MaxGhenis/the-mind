@@ -1,0 +1,39 @@
+name: Deploy Visualization
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'visualization/**'
+      - '.github/workflows/deploy-viz.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: visualization/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: ./visualization
+      run: npm ci
+    
+    - name: Build
+      working-directory: ./visualization
+      run: |
+        npm run build
+        cp -r build/* ../docs/
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        keep_files: true
