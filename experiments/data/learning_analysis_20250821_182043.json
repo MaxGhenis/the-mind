@@ -1,0 +1,31 @@
+{
+  "with_learning": {
+    "total_games": 30,
+    "learning_enabled": true,
+    "first_third_success_rate": 1.0,
+    "middle_third_success_rate": 1.0,
+    "last_third_success_rate": 1.0,
+    "improvement": 0.0,
+    "improvement_percent": 0.0,
+    "avg_rounds_first_third": 5.0,
+    "avg_rounds_last_third": 5.0,
+    "round_success_correlation": -0.23110671736639773
+  },
+  "without_learning": {
+    "total_games": 30,
+    "learning_enabled": false,
+    "first_third_success_rate": 1.0,
+    "middle_third_success_rate": 1.0,
+    "last_third_success_rate": 1.0,
+    "improvement": 0.0,
+    "improvement_percent": 0.0,
+    "avg_rounds_first_third": 5.0,
+    "avg_rounds_last_third": 5.0,
+    "round_success_correlation": NaN
+  },
+  "comparison": {
+    "learning_advantage": 0.0,
+    "learning_improvement": 0.0,
+    "no_learning_improvement": 0.0
+  }
+}
