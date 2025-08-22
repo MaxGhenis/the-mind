@@ -91,10 +91,13 @@ const GameVisualizer: React.FC<GameVisualizerProps> = ({ data }) => {
     // Plot cards
     const cards = roundData.cards_played || [];
     
+    // Ensure cards is an array of numbers
+    const cardValues = Array.isArray(cards) ? cards : [];
+    
     // Create timeline visualization
-    const cardData = cards.map((value, index) => ({
-      value,
-      time: (index + 1) * (roundData.time_taken / cards.length),
+    const cardData = cardValues.map((value: any, index: number) => ({
+      value: typeof value === 'number' ? value : parseInt(value),
+      time: (index + 1) * (roundData.time_taken / Math.max(cardValues.length, 1)),
       index
     }));
 
@@ -219,13 +222,13 @@ const GameVisualizer: React.FC<GameVisualizerProps> = ({ data }) => {
 
       <div id="game-viz" className="visualization-container"></div>
 
-      {roundData && (
+      {roundData && Array.isArray(roundData.cards_played) && (
         <div className="card-sequence">
           <h3>Card Sequence</h3>
           <div className="sequence">
-            {roundData.cards_played?.map((card, index) => (
+            {roundData.cards_played.map((card: any, index: number) => (
               <span key={index} className="card-badge">
-                {card}
+                {typeof card === 'number' ? card : parseInt(card)}
               </span>
             ))}
           </div>

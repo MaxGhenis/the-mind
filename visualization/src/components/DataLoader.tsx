@@ -32,12 +32,12 @@ const DataLoader: React.FC<DataLoaderProps> = ({ onDataLoaded }) => {
           onDataLoaded(processed);
           setLoading(false);
         },
-        error: (err) => {
+        error: (err: any) => {
           setError(err.message);
           setLoading(false);
         }
       });
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to load sample data');
       setLoading(false);
     }
@@ -67,7 +67,7 @@ const DataLoader: React.FC<DataLoaderProps> = ({ onDataLoaded }) => {
         onDataLoaded(processed);
         setLoading(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         setError(err.message);
         setLoading(false);
       }
