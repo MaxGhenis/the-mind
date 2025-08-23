@@ -15,20 +15,54 @@ const DataLoader: React.FC<DataLoaderProps> = ({ onDataLoaded }) => {
     setError(null);
     
     try {
-      // Load sample data from public folder
-      const response = await fetch('/sample_data.csv');
+      // Load sample data from public folder (use relative path for dev)
+      const url = process.env.PUBLIC_URL + '/sample_data.csv';
+      console.log('Fetching from:', url);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const text = await response.text();
+      console.log('Fetched text length:', text.length);
       
       Papa.parse(text, {
         header: true,
         dynamicTyping: true,
         complete: (results) => {
           const data = results.data as any[];
-          const processed: GameData[] = data.map(row => ({
-            ...row,
-            cards_played: JSON.parse(row.cards_played || '[]'),
-            model_config: JSON.parse(row.model_config || '{}')
-          }));
+          console.log('Parsed rows:', data.length);
+          console.log('First row sample:', data[0]);
+          
+          const processed: GameData[] = data
+            .filter(row => row && row.game_id) // Filter out empty rows
+            .map(row => {
+              try {
+                return {
+                  ...row,
+                  // Parse boolean fields properly
+                  success: row.success === true || row.success === 'true' || row.success === 'True',
+                  use_memory: row.use_memory === true || row.use_memory === 'true' || row.use_memory === 'True',
+                  final_success: row.final_success === true || row.final_success === 'true' || row.final_success === 'True',
+                  // Parse JSON fields
+                  cards_played: typeof row.cards_played === 'string' 
+                    ? JSON.parse(row.cards_played || '[]')
+                    : row.cards_played || [],
+                  model_config: typeof row.model_config === 'string'
+                    ? JSON.parse(row.model_config || '{}')
+                    : row.model_config || {},
+                  // Parse action_data if present
+                  action_data: row.action_data && typeof row.action_data === 'string'
+                    ? JSON.parse(row.action_data)
+                    : row.action_data
+                };
+              } catch (e) {
+                console.error('Error processing row:', row, e);
+                return null;
+              }
+            })
+            .filter(row => row !== null) as GameData[];
+          
+          console.log('Processed data:', processed.length, 'rows');
           onDataLoaded(processed);
           setLoading(false);
         },
@@ -55,15 +89,26 @@ const DataLoader: React.FC<DataLoaderProps> = ({ onDataLoaded }) => {
       dynamicTyping: true,
       complete: (results) => {
         const data = results.data as any[];
-        const processed: GameData[] = data.map(row => ({
-          ...row,
-          cards_played: typeof row.cards_played === 'string' 
-            ? JSON.parse(row.cards_played) 
-            : row.cards_played,
-          model_config: typeof row.model_config === 'string'
-            ? JSON.parse(row.model_config)
-            : row.model_config
-        }));
+        const processed: GameData[] = data
+          .filter(row => row && row.game_id)
+          .map(row => ({
+            ...row,
+            // Parse boolean fields properly
+            success: row.success === true || row.success === 'true' || row.success === 'True',
+            use_memory: row.use_memory === true || row.use_memory === 'true' || row.use_memory === 'True',
+            final_success: row.final_success === true || row.final_success === 'true' || row.final_success === 'True',
+            // Parse JSON fields
+            cards_played: typeof row.cards_played === 'string' 
+              ? JSON.parse(row.cards_played) 
+              : row.cards_played,
+            model_config: typeof row.model_config === 'string'
+              ? JSON.parse(row.model_config)
+              : row.model_config,
+            // Parse action_data if present
+            action_data: row.action_data && typeof row.action_data === 'string'
+              ? JSON.parse(row.action_data)
+              : row.action_data
+          }));
         onDataLoaded(processed);
         setLoading(false);
       },
@@ -77,6 +122,7 @@ const DataLoader: React.FC<DataLoaderProps> = ({ onDataLoaded }) => {
   useEffect(() => {
     // Auto-load sample data on mount
     loadSampleData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

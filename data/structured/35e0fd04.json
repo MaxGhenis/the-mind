@@ -1,0 +1,71 @@
+{
+  "game_id": "35e0fd04",
+  "metadata": {
+    "experiment": "structured_test",
+    "model": "gemini-2.5-flash-lite",
+    "temperature": 0.7,
+    "use_memory": false,
+    "num_players": 3,
+    "start_time": "2025-08-22T08:35:28.278787",
+    "end_time": "2025-08-22T08:35:46.666892"
+  },
+  "rounds": [
+    {
+      "round_number": 1,
+      "cards_dealt": [
+        {
+          "player": 1,
+          "card": 8
+        },
+        {
+          "player": 2,
+          "card": 37
+        },
+        {
+          "player": 3,
+          "card": 4
+        }
+      ],
+      "actions": [
+        {
+          "action_id": 1,
+          "player": 1,
+          "card": 8,
+          "decision_time": 0.0,
+          "wait_time": 15.0,
+          "play_time": 15.0,
+          "llm_response_time": 7.433308124542236,
+          "correct": true
+        },
+        {
+          "action_id": 2,
+          "player": 2,
+          "card": 37,
+          "decision_time": 7.434081077575684,
+          "wait_time": 15.0,
+          "play_time": 15.0,
+          "llm_response_time": 5.503529071807861,
+          "correct": true
+        },
+        {
+          "action_id": 3,
+          "player": 3,
+          "card": 4,
+          "decision_time": 12.937777280807495,
+          "wait_time": 5.0,
+          "play_time": 5.0,
+          "llm_response_time": 5.45014762878418,
+          "correct": true
+        }
+      ],
+      "outcome": "success",
+      "failure_point": null,
+      "duration": 18.38806700706482,
+      "cards_played_order": [
+        4,
+        8,
+        37
+      ]
+    }
+  ]
+}

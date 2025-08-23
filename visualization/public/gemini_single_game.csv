@@ -1,0 +1,2 @@
+game_id,timestamp,experiment,use_memory,temperature,num_players,round_number,success,cards_played,time_taken,final_success,model_config
+a98444ba,2025-08-21T23:19:32.114298,gemini-2.5-flash-lite-single,False,0.7,3,1,False,"[43, 91, 84]",28.78,False,"{""P1"": ""gemini-2.5-flash-lite"", ""P2"": ""gemini-2.5-flash-lite"", ""P3"": ""gemini-2.5-flash-lite""}"

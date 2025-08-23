@@ -3,11 +3,12 @@ import './App.css';
 import DataLoader from './components/DataLoader';
 import ExperimentOverview from './components/ExperimentOverview';
 import GameVisualizer from './components/GameVisualizer';
+import GameAnimator from './components/GameAnimator';
 import { GameData } from './types';
 
 function App() {
   const [data, setData] = useState<GameData[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'visualizer'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'visualizer' | 'animator'>('overview');
 
   const handleDataLoaded = (loadedData: GameData[]) => {
     setData(loadedData);
@@ -39,6 +40,12 @@ function App() {
                 Game Visualizer
               </button>
               <button 
+                className={`tab ${activeTab === 'animator' ? 'active' : ''}`}
+                onClick={() => setActiveTab('animator')}
+              >
+                Game Animator
+              </button>
+              <button 
                 className="tab reload"
                 onClick={() => setData([])}
               >
@@ -49,6 +56,7 @@ function App() {
             <div className="tab-content">
               {activeTab === 'overview' && <ExperimentOverview data={data} />}
               {activeTab === 'visualizer' && <GameVisualizer data={data} />}
+              {activeTab === 'animator' && <GameAnimator data={data} />}
             </div>
           </>
         )}

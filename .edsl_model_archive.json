@@ -1,11 +1,11 @@
 {
     "metadata": {
         "title": "Model Information Archive",
-        "description": "This archive contains data about available models. Auto-generated on 2025-08-21T22:21:16.148955.",
-        "created_at": "2025-08-21T22:21:16.148955",
+        "description": "This archive contains data about available models. Auto-generated on 2025-08-22T08:28:40.929702.",
+        "created_at": "2025-08-22T08:28:40.929702",
         "fetcher_name": "coop_working"
     },
-    "created_at": "2025-08-21T22:21:16.148955",
+    "created_at": "2025-08-22T08:28:40.929702",
     "data": {
         "anthropic": [
             {
@@ -662,6 +662,18 @@
             },
             {
                 "service_name": "deep_infra",
+                "id": "deepseek-ai/DeepSeek-V3.1",
+                "raw_data": {
+                    "id": "deepseek-ai/DeepSeek-V3.1",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.8,
+                    "usd_per_1M_output_tokens": 2.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "deep_infra",
                 "id": "google/codegemma-7b-it",
                 "raw_data": {
                     "id": "google/codegemma-7b-it",
@@ -870,7 +882,7 @@
                 "raw_data": {
                     "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
                     "works_with_text": true,
-                    "works_with_images": false,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 0.18,
                     "usd_per_1M_output_tokens": 0.6
                 },
@@ -1005,18 +1017,6 @@
                     "works_with_images": true,
                     "usd_per_1M_input_tokens": 0.05,
                     "usd_per_1M_output_tokens": 0.1
-                },
-                "original_class": "dict"
-            },
-            {
-                "service_name": "deep_infra",
-                "id": "microsoft/WizardLM-2-7B",
-                "raw_data": {
-                    "id": "microsoft/WizardLM-2-7B",
-                    "works_with_text": true,
-                    "works_with_images": false,
-                    "usd_per_1M_input_tokens": 0.07,
-                    "usd_per_1M_output_tokens": 0.14
                 },
                 "original_class": "dict"
             },
@@ -1158,7 +1158,7 @@
                 "raw_data": {
                     "id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
                     "works_with_text": true,
-                    "works_with_images": true,
+                    "works_with_images": false,
                     "usd_per_1M_input_tokens": 0.8,
                     "usd_per_1M_output_tokens": 2.4
                 },
@@ -1281,18 +1281,6 @@
                     "works_with_images": false,
                     "usd_per_1M_input_tokens": 0.03,
                     "usd_per_1M_output_tokens": 0.05
-                },
-                "original_class": "dict"
-            },
-            {
-                "service_name": "deep_infra",
-                "id": "zai-org/GLM-4.5V",
-                "raw_data": {
-                    "id": "zai-org/GLM-4.5V",
-                    "works_with_text": false,
-                    "works_with_images": true,
-                    "usd_per_1M_input_tokens": 0.8,
-                    "usd_per_1M_output_tokens": 2.4
                 },
                 "original_class": "dict"
             }
@@ -1570,7 +1558,7 @@
                 "raw_data": {
                     "id": "gemini-2.5-flash",
                     "works_with_text": true,
-                    "works_with_images": false,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 0.3,
                     "usd_per_1M_output_tokens": 2.5
                 },
@@ -1606,7 +1594,7 @@
                 "raw_data": {
                     "id": "gemini-2.5-flash-preview-05-20",
                     "works_with_text": true,
-                    "works_with_images": false,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 0.5,
                     "usd_per_1M_output_tokens": 10.0
                 },
@@ -1865,6 +1853,30 @@
                     "usd_per_1M_output_tokens": 3.0
                 },
                 "original_class": "dict"
+            },
+            {
+                "service_name": "groq",
+                "id": "openai/gpt-oss-120b",
+                "raw_data": {
+                    "id": "openai/gpt-oss-120b",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.15,
+                    "usd_per_1M_output_tokens": 0.75
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "groq",
+                "id": "openai/gpt-oss-20b",
+                "raw_data": {
+                    "id": "openai/gpt-oss-20b",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.1,
+                    "usd_per_1M_output_tokens": 0.5
+                },
+                "original_class": "dict"
             }
         ],
         "mistral": [
@@ -1985,6 +1997,18 @@
                     "works_with_images": false,
                     "usd_per_1M_input_tokens": 0.1,
                     "usd_per_1M_output_tokens": 0.3
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "mistral",
+                "id": "magistral-medium-2506",
+                "raw_data": {
+                    "id": "magistral-medium-2506",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 6.0
                 },
                 "original_class": "dict"
             },
@@ -2434,6 +2458,30 @@
             },
             {
                 "service_name": "mistral",
+                "id": "voxtral-mini-2507",
+                "raw_data": {
+                    "id": "voxtral-mini-2507",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 6.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "mistral",
+                "id": "voxtral-mini-latest",
+                "raw_data": {
+                    "id": "voxtral-mini-latest",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 6.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "mistral",
                 "id": "voxtral-mini-latest",
                 "raw_data": {
                     "id": "voxtral-mini-latest",
@@ -2668,7 +2716,7 @@
                 "raw_data": {
                     "id": "gpt-4.1-nano",
                     "works_with_text": true,
-                    "works_with_images": true,
+                    "works_with_images": false,
                     "usd_per_1M_input_tokens": 0.1,
                     "usd_per_1M_output_tokens": 0.4
                 },
@@ -2680,7 +2728,7 @@
                 "raw_data": {
                     "id": "gpt-4.1-nano-2025-04-14",
                     "works_with_text": true,
-                    "works_with_images": false,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 0.1,
                     "usd_per_1M_output_tokens": 0.4
                 },
@@ -2867,6 +2915,440 @@
                 "original_class": "dict"
             }
         ],
+        "openai_v2": [
+            {
+                "service_name": "openai_v2",
+                "id": "chatgpt-4o-latest",
+                "raw_data": {
+                    "id": "chatgpt-4o-latest",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 15.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-3.5-turbo",
+                "raw_data": {
+                    "id": "gpt-3.5-turbo",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.5,
+                    "usd_per_1M_output_tokens": 1.5
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-3.5-turbo-0125",
+                "raw_data": {
+                    "id": "gpt-3.5-turbo-0125",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.5,
+                    "usd_per_1M_output_tokens": 1.5
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-3.5-turbo-1106",
+                "raw_data": {
+                    "id": "gpt-3.5-turbo-1106",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.0,
+                    "usd_per_1M_output_tokens": 2.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4",
+                "raw_data": {
+                    "id": "gpt-4",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 30.0,
+                    "usd_per_1M_output_tokens": 60.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-0125-preview",
+                "raw_data": {
+                    "id": "gpt-4-0125-preview",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 30.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-0613",
+                "raw_data": {
+                    "id": "gpt-4-0613",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 30.0,
+                    "usd_per_1M_output_tokens": 60.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-1106-preview",
+                "raw_data": {
+                    "id": "gpt-4-1106-preview",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 30.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-turbo",
+                "raw_data": {
+                    "id": "gpt-4-turbo",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 30.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-turbo-2024-04-09",
+                "raw_data": {
+                    "id": "gpt-4-turbo-2024-04-09",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 30.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4-turbo-preview",
+                "raw_data": {
+                    "id": "gpt-4-turbo-preview",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 30.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1",
+                "raw_data": {
+                    "id": "gpt-4.1",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 8.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1-2025-04-14",
+                "raw_data": {
+                    "id": "gpt-4.1-2025-04-14",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 8.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1-mini",
+                "raw_data": {
+                    "id": "gpt-4.1-mini",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.4,
+                    "usd_per_1M_output_tokens": 1.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1-mini-2025-04-14",
+                "raw_data": {
+                    "id": "gpt-4.1-mini-2025-04-14",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.4,
+                    "usd_per_1M_output_tokens": 1.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1-nano",
+                "raw_data": {
+                    "id": "gpt-4.1-nano",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.1,
+                    "usd_per_1M_output_tokens": 0.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4.1-nano-2025-04-14",
+                "raw_data": {
+                    "id": "gpt-4.1-nano-2025-04-14",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.1,
+                    "usd_per_1M_output_tokens": 0.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o",
+                "raw_data": {
+                    "id": "gpt-4o",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.5,
+                    "usd_per_1M_output_tokens": 10.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o-2024-05-13",
+                "raw_data": {
+                    "id": "gpt-4o-2024-05-13",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 15.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o-2024-08-06",
+                "raw_data": {
+                    "id": "gpt-4o-2024-08-06",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 3.75,
+                    "usd_per_1M_output_tokens": 15.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o-2024-11-20",
+                "raw_data": {
+                    "id": "gpt-4o-2024-11-20",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.5,
+                    "usd_per_1M_output_tokens": 10.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o-mini",
+                "raw_data": {
+                    "id": "gpt-4o-mini",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.15,
+                    "usd_per_1M_output_tokens": 0.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-4o-mini-2024-07-18",
+                "raw_data": {
+                    "id": "gpt-4o-mini-2024-07-18",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.15,
+                    "usd_per_1M_output_tokens": 0.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "gpt-5-chat-latest",
+                "raw_data": {
+                    "id": "gpt-5-chat-latest",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.25,
+                    "usd_per_1M_output_tokens": 10.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o1",
+                "raw_data": {
+                    "id": "o1",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 15.0,
+                    "usd_per_1M_output_tokens": 60.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o1-2024-12-17",
+                "raw_data": {
+                    "id": "o1-2024-12-17",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 15.0,
+                    "usd_per_1M_output_tokens": 60.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o1-pro",
+                "raw_data": {
+                    "id": "o1-pro",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 150.0,
+                    "usd_per_1M_output_tokens": 600.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o1-pro-2025-03-19",
+                "raw_data": {
+                    "id": "o1-pro-2025-03-19",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 150.0,
+                    "usd_per_1M_output_tokens": 600.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3",
+                "raw_data": {
+                    "id": "o3",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 2.0,
+                    "usd_per_1M_output_tokens": 8.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3-2025-04-16",
+                "raw_data": {
+                    "id": "o3-2025-04-16",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 10.0,
+                    "usd_per_1M_output_tokens": 40.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3-mini",
+                "raw_data": {
+                    "id": "o3-mini",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.1,
+                    "usd_per_1M_output_tokens": 4.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3-mini-2025-01-31",
+                "raw_data": {
+                    "id": "o3-mini-2025-01-31",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.1,
+                    "usd_per_1M_output_tokens": 4.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3-pro",
+                "raw_data": {
+                    "id": "o3-pro",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 20.0,
+                    "usd_per_1M_output_tokens": 80.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o3-pro-2025-06-10",
+                "raw_data": {
+                    "id": "o3-pro-2025-06-10",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 20.0,
+                    "usd_per_1M_output_tokens": 80.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o4-mini",
+                "raw_data": {
+                    "id": "o4-mini",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.1,
+                    "usd_per_1M_output_tokens": 4.4
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "openai_v2",
+                "id": "o4-mini-2025-04-16",
+                "raw_data": {
+                    "id": "o4-mini-2025-04-16",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.1,
+                    "usd_per_1M_output_tokens": 4.4
+                },
+                "original_class": "dict"
+            }
+        ],
         "perplexity": [
             {
                 "service_name": "perplexity",
@@ -2944,6 +3426,18 @@
             },
             {
                 "service_name": "together",
+                "id": "Qwen/Qwen2-72B-Instruct",
+                "raw_data": {
+                    "id": "Qwen/Qwen2-72B-Instruct",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.9,
+                    "usd_per_1M_output_tokens": 0.9
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
                 "id": "Qwen/Qwen2-VL-72B-Instruct",
                 "raw_data": {
                     "id": "Qwen/Qwen2-VL-72B-Instruct",
@@ -2975,6 +3469,18 @@
                     "works_with_images": false,
                     "usd_per_1M_input_tokens": 0.3,
                     "usd_per_1M_output_tokens": 0.3
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "raw_data": {
+                    "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.8,
+                    "usd_per_1M_output_tokens": 0.8
                 },
                 "original_class": "dict"
             },
@@ -3136,11 +3642,35 @@
             },
             {
                 "service_name": "together",
-                "id": "deepseek-ai/DeepSeek-R1-0528-tput",
+                "id": "deepseek-ai/DeepSeek-V3",
                 "raw_data": {
-                    "id": "deepseek-ai/DeepSeek-R1-0528-tput",
+                    "id": "deepseek-ai/DeepSeek-V3",
                     "works_with_text": true,
                     "works_with_images": false,
+                    "usd_per_1M_input_tokens": 1.25,
+                    "usd_per_1M_output_tokens": 1.25
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "google/gemma-2-27b-it",
+                "raw_data": {
+                    "id": "google/gemma-2-27b-it",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.8,
+                    "usd_per_1M_output_tokens": 0.8
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "google/gemma-3-27b-it",
+                "raw_data": {
+                    "id": "google/gemma-3-27b-it",
+                    "works_with_text": true,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 5.0,
                     "usd_per_1M_output_tokens": 5.0
                 },
@@ -3232,11 +3762,35 @@
             },
             {
                 "service_name": "together",
-                "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+                "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
                 "raw_data": {
-                    "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+                    "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
                     "works_with_text": true,
                     "works_with_images": false,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 5.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                "raw_data": {
+                    "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                    "works_with_text": true,
+                    "works_with_images": true,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 5.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                "raw_data": {
+                    "id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                    "works_with_text": true,
+                    "works_with_images": true,
                     "usd_per_1M_input_tokens": 5.0,
                     "usd_per_1M_output_tokens": 5.0
                 },
@@ -3292,6 +3846,90 @@
             },
             {
                 "service_name": "together",
+                "id": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                "raw_data": {
+                    "id": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.88,
+                    "usd_per_1M_output_tokens": 0.88
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                "raw_data": {
+                    "id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.18,
+                    "usd_per_1M_output_tokens": 0.18
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "mistralai/Mistral-7B-Instruct-v0.1",
+                "raw_data": {
+                    "id": "mistralai/Mistral-7B-Instruct-v0.1",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.2,
+                    "usd_per_1M_output_tokens": 0.2
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "mistralai/Mistral-7B-Instruct-v0.3",
+                "raw_data": {
+                    "id": "mistralai/Mistral-7B-Instruct-v0.3",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.2,
+                    "usd_per_1M_output_tokens": 0.2
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "mistralai/Mistral-Small-24B-Instruct-2501",
+                "raw_data": {
+                    "id": "mistralai/Mistral-Small-24B-Instruct-2501",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 5.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                "raw_data": {
+                    "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.6,
+                    "usd_per_1M_output_tokens": 0.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "moonshotai/Kimi-K2-Instruct",
+                "raw_data": {
+                    "id": "moonshotai/Kimi-K2-Instruct",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 5.0,
+                    "usd_per_1M_output_tokens": 5.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
                 "id": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
                 "raw_data": {
                     "id": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
@@ -3299,6 +3937,30 @@
                     "works_with_images": false,
                     "usd_per_1M_input_tokens": 5.0,
                     "usd_per_1M_output_tokens": 5.0
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "openai/gpt-oss-120b",
+                "raw_data": {
+                    "id": "openai/gpt-oss-120b",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.15,
+                    "usd_per_1M_output_tokens": 0.6
+                },
+                "original_class": "dict"
+            },
+            {
+                "service_name": "together",
+                "id": "openai/gpt-oss-20b",
+                "raw_data": {
+                    "id": "openai/gpt-oss-20b",
+                    "works_with_text": true,
+                    "works_with_images": false,
+                    "usd_per_1M_input_tokens": 0.05,
+                    "usd_per_1M_output_tokens": 0.2
                 },
                 "original_class": "dict"
             },
