@@ -2,7 +2,7 @@
 
 import random
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -57,7 +57,7 @@ class Deck:
         """Reset the deck to its initial state."""
         self.cards = [Card(i) for i in range(self.min_value, self.max_value + 1)]
     
-    def shuffle(self, seed: int | None = None) -> None:
+    def shuffle(self, seed: Optional[int] = None) -> None:
         """Shuffle the deck."""
         if seed is not None:
             random.seed(seed)

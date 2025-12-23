@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
 import { GameData, ExperimentSummary } from '../types';
 
@@ -74,7 +74,8 @@ const ExperimentOverview: React.FC<ExperimentOverviewProps> = ({ data }) => {
     value: (data.totalSuccess / data.count * 100).toFixed(1)
   }));
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+  // Publication-quality color palette
+  const COLORS = ['#8b5cf6', '#3b82f6', '#14b8a6', '#f59e0b', '#ec4899', '#22c55e'];
 
   return (
     <div className="experiment-overview">
@@ -107,11 +108,27 @@ const ExperimentOverview: React.FC<ExperimentOverviewProps> = ({ data }) => {
           <h3>Success Rate by Experiment</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={successRateData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-              <YAxis label={{ value: 'Success Rate (%)', angle: -90, position: 'insideLeft' }} />
-              <Tooltip />
-              <Bar dataKey="Success Rate" fill="#8884d8" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis
+                dataKey="name"
+                angle={-45}
+                textAnchor="end"
+                height={100}
+                tick={{ fill: '#475569', fontSize: 12 }}
+              />
+              <YAxis
+                label={{ value: 'Success Rate (%)', angle: -90, position: 'insideLeft', style: { fill: '#475569' } }}
+                tick={{ fill: '#475569' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Bar dataKey="Success Rate" fill="#4f46e5" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -120,11 +137,34 @@ const ExperimentOverview: React.FC<ExperimentOverviewProps> = ({ data }) => {
           <h3>Average Rounds Completed</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={roundProgressData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-              <YAxis label={{ value: 'Rounds', angle: -90, position: 'insideLeft' }} />
-              <Tooltip />
-              <Line type="monotone" dataKey="Avg Rounds" stroke="#82ca9d" strokeWidth={2} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis
+                dataKey="name"
+                angle={-45}
+                textAnchor="end"
+                height={100}
+                tick={{ fill: '#475569', fontSize: 12 }}
+              />
+              <YAxis
+                label={{ value: 'Rounds', angle: -90, position: 'insideLeft', style: { fill: '#475569' } }}
+                tick={{ fill: '#475569' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="Avg Rounds"
+                stroke="#14b8a6"
+                strokeWidth={3}
+                dot={{ fill: '#14b8a6', r: 5 }}
+                activeDot={{ r: 7 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -139,15 +179,24 @@ const ExperimentOverview: React.FC<ExperimentOverviewProps> = ({ data }) => {
                 cy="50%"
                 labelLine={false}
                 label={(entry) => `${entry.name}: ${entry.value}%`}
-                outerRadius={80}
+                outerRadius={90}
                 fill="#8884d8"
                 dataKey="value"
+                stroke="white"
+                strokeWidth={3}
               >
                 {memoryData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>

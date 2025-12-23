@@ -4,11 +4,12 @@ import DataLoader from './components/DataLoader';
 import ExperimentOverview from './components/ExperimentOverview';
 import GameVisualizer from './components/GameVisualizer';
 import GameAnimator from './components/GameAnimator';
+import ModelComparison from './components/ModelComparison';
 import { GameData } from './types';
 
 function App() {
   const [data, setData] = useState<GameData[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'visualizer' | 'animator'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'models' | 'visualizer' | 'animator'>('overview');
 
   const handleDataLoaded = (loadedData: GameData[]) => {
     setData(loadedData);
@@ -27,25 +28,31 @@ function App() {
         ) : (
           <>
             <div className="tabs">
-              <button 
+              <button
                 className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
                 onClick={() => setActiveTab('overview')}
               >
                 Experiment Overview
               </button>
-              <button 
+              <button
+                className={`tab ${activeTab === 'models' ? 'active' : ''}`}
+                onClick={() => setActiveTab('models')}
+              >
+                Model Comparison
+              </button>
+              <button
                 className={`tab ${activeTab === 'visualizer' ? 'active' : ''}`}
                 onClick={() => setActiveTab('visualizer')}
               >
                 Game Visualizer
               </button>
-              <button 
+              <button
                 className={`tab ${activeTab === 'animator' ? 'active' : ''}`}
                 onClick={() => setActiveTab('animator')}
               >
                 Game Animator
               </button>
-              <button 
+              <button
                 className="tab reload"
                 onClick={() => setData([])}
               >
@@ -55,6 +62,7 @@ function App() {
 
             <div className="tab-content">
               {activeTab === 'overview' && <ExperimentOverview data={data} />}
+              {activeTab === 'models' && <ModelComparison data={data} />}
               {activeTab === 'visualizer' && <GameVisualizer data={data} />}
               {activeTab === 'animator' && <GameAnimator data={data} />}
             </div>
@@ -64,12 +72,10 @@ function App() {
 
       <footer className="App-footer">
         <p>
-          Paper: "Emergent Coordination in Multi-Agent LLM Systems: A Study Using The Mind Card Game"
+          <strong>Research:</strong> "Emergent Coordination in Multi-Agent LLM Systems: A Study Using The Mind Card Game"
         </p>
         <p>
-          <a href="https://github.com/yourusername/the-mind" target="_blank" rel="noopener noreferrer">
-            GitHub Repository
-          </a>
+          Interactive visualization dashboard for analyzing multi-agent LLM coordination experiments
         </p>
       </footer>
     </div>

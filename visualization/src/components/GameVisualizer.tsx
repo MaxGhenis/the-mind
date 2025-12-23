@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import { GameData } from '../types';
+import LLMReasoningPanel from './LLMReasoningPanel';
 
 interface GameVisualizerProps {
   data: GameData[];
@@ -90,10 +91,10 @@ const GameVisualizer: React.FC<GameVisualizerProps> = ({ data }) => {
 
     // Plot cards
     const cards = roundData.cards_played || [];
-    
+
     // Ensure cards is an array of numbers
     const cardValues = Array.isArray(cards) ? cards : [];
-    
+
     // Create timeline visualization
     const cardData = cardValues.map((value: any, index: number) => ({
       value: typeof value === 'number' ? value : parseInt(value),
@@ -158,7 +159,7 @@ const GameVisualizer: React.FC<GameVisualizerProps> = ({ data }) => {
       .style('text-anchor', 'middle')
       .style('font-size', '12px')
       .text(d => d.value);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundData]);
 
   return (
@@ -233,6 +234,13 @@ const GameVisualizer: React.FC<GameVisualizerProps> = ({ data }) => {
             ))}
           </div>
         </div>
+      )}
+
+      {roundData && (
+        <LLMReasoningPanel
+          actionData={roundData.action_data}
+          roundNumber={selectedRound}
+        />
       )}
     </div>
   );

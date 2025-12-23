@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { GameData } from '../types';
+import LLMReasoningPanel from './LLMReasoningPanel';
 
 interface GameAnimatorProps {
   data: GameData[];
@@ -574,6 +575,13 @@ const GameAnimator: React.FC<GameAnimatorProps> = ({ data }) => {
             </p>
           )}
         </div>
+      )}
+
+      {roundData && (
+        <LLMReasoningPanel
+          actionData={roundData.action_data}
+          roundNumber={selectedRound}
+        />
       )}
     </div>
   );

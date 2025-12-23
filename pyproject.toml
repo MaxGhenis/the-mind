@@ -13,7 +13,7 @@ authors = [
     {name = "Max Ghenis"},
 ]
 dependencies = [
-    "expectedparrot>=0.1.0",
+    "expectedparrot>=0.0.1",
     "pandas>=2.0.0",
     "numpy>=1.24.0",
     "scipy>=1.10.0",
@@ -22,6 +22,11 @@ dependencies = [
     "typer>=0.9.0",
     "python-dotenv>=1.0.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["themind*"]
+exclude = ["data*", "paper*", "experiments*", "edsl_latest*", "node_modules*", "visualization*"]
 
 [project.optional-dependencies]
 dev = [

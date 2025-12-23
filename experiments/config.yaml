@@ -1,0 +1,119 @@
+# Experiment Configuration for The Mind LLM Coordination Research
+
+# Model Configuration
+# Uncomment and configure the models you have API keys for
+models:
+  # OpenAI Models
+  gpt-4o:
+    enabled: true
+    name: "gpt-4o"
+    cost_per_1k_tokens: 0.005  # Approximate
+
+  gpt-4o-mini:
+    enabled: true
+    name: "gpt-4o-mini"
+    cost_per_1k_tokens: 0.0002  # Approximate
+
+  # Anthropic Models
+  claude:
+    enabled: true
+    name: "claude-3-5-sonnet-20241022"
+    cost_per_1k_tokens: 0.003  # Approximate
+
+  # Google Gemini Models
+  gemini-pro:
+    enabled: true
+    name: "gemini-1.5-pro"
+    cost_per_1k_tokens: 0.00075  # Approximate
+
+  gemini-flash:
+    enabled: true
+    name: "gemini-1.5-flash"
+    cost_per_1k_tokens: 0.0002  # Approximate
+
+# Experiment Parameters
+experiment:
+  # Number of games per condition for statistical significance
+  games_per_condition: 50
+
+  # Number of games for smaller exploratory conditions
+  games_per_minor_condition: 30
+
+  # Maximum rounds per game
+  max_rounds: 8
+
+  # Starting lives per game
+  starting_lives: 3
+
+  # Random seed for reproducibility (null for random)
+  seed: 42
+
+  # Output directory
+  output_dir: "experiments/data"
+
+# Experimental Conditions
+conditions:
+  # 1. Baseline: No memory, standard temperature
+  baseline:
+    use_memory: false
+    temperature: 0.7
+    num_players: 3
+    games: 50
+
+  # 2. Learning: With memory of previous rounds
+  learning:
+    use_memory: true
+    temperature: 0.7
+    num_players: 3
+    games: 50
+
+  # 3. Heterogeneous: Mixed models
+  heterogeneous:
+    use_memory: false
+    temperature: 0.7
+    num_players: 3
+    games: 50
+
+  # 4. Heterogeneous with learning
+  heterogeneous_learning:
+    use_memory: true
+    temperature: 0.7
+    num_players: 3
+    games: 50
+
+  # 5. Scaling: Different team sizes
+  scaling:
+    num_players: [2, 3, 4]
+    use_memory: false
+    temperature: 0.7
+    games: 50
+
+  # 6. Temperature variation
+  temperature:
+    temperatures: [0.3, 0.7, 1.0]
+    use_memory: false
+    num_players: 3
+    games: 30
+
+# Analysis Configuration
+analysis:
+  # Confidence level for statistical tests
+  confidence_level: 0.95
+
+  # Minimum effect size to report
+  min_effect_size: 0.1
+
+  # Metrics to compute
+  metrics:
+    - success_rate
+    - average_rounds_completed
+    - coordination_efficiency
+    - learning_improvement
+
+  # Plots to generate
+  plots:
+    - success_by_model
+    - learning_curves
+    - heterogeneous_vs_homogeneous
+    - scaling_analysis
+    - temperature_effects
