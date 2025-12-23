@@ -1,0 +1,30 @@
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--muted);
+  background: transparent;
+  transition: all 0.3s;
+}
+
+.complete {
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 10px var(--amber-glow);
+}
+
+.current {
+  border-color: var(--amber);
+  animation: dotPulse 1s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.5); background: var(--amber); }
+}

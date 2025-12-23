@@ -1,0 +1,277 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Typography */
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+h1 .highlight {
+  color: var(--amber);
+  text-shadow: 0 0 60px var(--amber-glow), 0 0 120px var(--amber-glow);
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3rem;
+}
+
+/* Card container */
+.experimentCard {
+  background: linear-gradient(145deg, var(--slate) 0%, var(--deep-navy) 100%);
+  border: 1px solid rgba(255, 179, 71, 0.2);
+  border-radius: 2px;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.experimentCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+}
+
+/* Input styling */
+.inputGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.inputGroup input {
+  font-family: 'Space Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  width: 140px;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid var(--amber);
+  color: var(--amber);
+  text-align: center;
+  border-radius: 0;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.inputGroup input:focus {
+  box-shadow: 0 0 30px var(--amber-glow);
+}
+
+.inputGroup input::-webkit-inner-spin-button,
+.inputGroup input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.inputSuffix {
+  font-size: 1rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Buttons */
+button {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  border: 2px solid var(--amber);
+  background: transparent;
+  color: var(--amber);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  border-radius: 0;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--amber);
+  transition: left 0.3s;
+  z-index: -1;
+}
+
+button:hover::before {
+  left: 0;
+}
+
+button:hover {
+  color: var(--deep-navy);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnPlay {
+  font-size: 1.5rem;
+  padding: 1.5rem 4rem;
+  margin-top: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--amber-glow); }
+  50% { box-shadow: 0 0 40px 10px var(--amber-glow); }
+}
+
+.btnPlay:hover {
+  animation: none;
+}
+
+/* Instructions */
+.instructions {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 400px;
+  margin: 0 auto 2rem;
+}
+
+.instructions strong {
+  color: var(--cream);
+}
+
+/* Phase indicator */
+.phase {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--amber);
+  border: 1px solid var(--amber);
+  padding: 0.3rem 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Results */
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255, 179, 71, 0.2);
+  margin: 2rem 0;
+}
+
+.stat {
+  background: var(--slate);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.statValue {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--amber);
+}
+
+.statLabel {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+/* Results table */
+.resultsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 2rem 0;
+}
+
+.resultsTable th {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 179, 71, 0.2);
+}
+
+.resultsTable td {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.match { color: var(--success); }
+.noMatch { color: var(--error); }
+
+/* Compare box */
+.compareBox {
+  background: rgba(255, 179, 71, 0.05);
+  border-left: 3px solid var(--amber);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+}
+
+.compareBox h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+
+.compareBox p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Button group */
+.btnGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.btnSecondary {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.btnSecondary::before {
+  background: var(--muted);
+}
+
+.btnSecondary:hover {
+  color: var(--deep-navy);
+}

@@ -4,7 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Mind: Human Timing Experiment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --amber: #ffb347;
+            --amber-glow: rgba(255, 179, 71, 0.4);
+            --deep-navy: #0a0a12;
+            --slate: #1a1a2e;
+            --muted: #5a5a7a;
+            --cream: #fef3e2;
+            --success: #7dd3a0;
+            --error: #ff6b6b;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,254 +24,553 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            font-family: 'Space Mono', monospace;
+            background: var(--deep-navy);
+            color: var(--cream);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Scanline overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Grain texture */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 999;
         }
 
         .container {
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
+        /* Typography */
         h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #f59e0b, #ef4444);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 0.9;
+            margin-bottom: 0.5rem;
         }
 
-        .card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 20px 0;
-            backdrop-filter: blur(10px);
+        h1 .highlight {
+            color: var(--amber);
+            text-shadow: 0 0 60px var(--amber-glow), 0 0 120px var(--amber-glow);
         }
 
-        .card-value {
-            font-size: 6rem;
-            font-weight: bold;
-            color: #f59e0b;
-            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+        .subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 3rem;
         }
 
-        .instructions {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #94a3b8;
-            margin: 20px 0;
+        /* Card container */
+        .experiment-card {
+            background: linear-gradient(145deg, var(--slate) 0%, var(--deep-navy) 100%);
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            border-radius: 2px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        input[type="number"] {
-            font-size: 2rem;
-            padding: 15px 30px;
-            border-radius: 10px;
-            border: 2px solid #f59e0b;
-            background: rgba(0,0,0,0.3);
-            color: #fff;
-            width: 150px;
-            text-align: center;
+        .experiment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
         }
 
-        button {
+        /* The playing card */
+        .playing-card {
+            width: 180px;
+            height: 260px;
+            margin: 2rem auto;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #2a2a3e 0%, #1a1a28 100%);
+            border: 2px solid var(--amber);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 40px var(--amber-glow),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0) rotateX(5deg); }
+            50% { transform: translateY(-10px) rotateX(5deg); }
+        }
+
+        .playing-card .value {
+            font-family: 'Syne', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--amber);
+            text-shadow: 0 0 30px var(--amber-glow);
+        }
+
+        .playing-card .corner {
+            position: absolute;
             font-size: 1.2rem;
-            padding: 15px 40px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            margin: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 700;
+            color: var(--amber);
+            opacity: 0.6;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+        .playing-card .corner.top { top: 12px; left: 14px; }
+        .playing-card .corner.bottom { bottom: 12px; right: 14px; transform: rotate(180deg); }
 
-        .btn-primary {
-            background: linear-gradient(90deg, #f59e0b, #ef4444);
-            color: #fff;
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border: 2px solid #fff;
-        }
-
-        .btn-play {
-            font-size: 2rem;
-            padding: 30px 60px;
-            background: linear-gradient(90deg, #10b981, #059669);
+        /* Timer display - oscilloscope style */
+        .timer-container {
+            margin: 2rem auto;
+            text-align: center;
         }
 
         .timer {
-            font-size: 4rem;
-            font-family: 'JetBrains Mono', monospace;
-            color: #10b981;
-            margin: 20px 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--amber);
+            text-shadow:
+                0 0 20px var(--amber-glow),
+                0 0 40px var(--amber-glow),
+                0 0 80px var(--amber-glow);
+            letter-spacing: -0.05em;
+            position: relative;
         }
 
-        .phase-indicator {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #64748b;
-            margin-bottom: 10px;
+        .timer::after {
+            content: 's';
+            font-size: 1.5rem;
+            opacity: 0.5;
+            margin-left: 5px;
+            vertical-align: super;
         }
 
-        .results-table {
+        .timer-bar {
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95rem;
+            height: 4px;
+            background: rgba(255, 179, 71, 0.1);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .results-table th, .results-table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .timer-bar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: var(--progress, 0%);
+            background: var(--amber);
+            box-shadow: 0 0 20px var(--amber-glow);
+            transition: width 0.1s linear;
         }
 
-        .results-table th {
-            color: #f59e0b;
-            font-weight: 600;
+        /* Input styling */
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        .consistent { color: #10b981; }
-        .inconsistent { color: #ef4444; }
-
-        .summary-stat {
-            display: inline-block;
-            margin: 10px 20px;
-            padding: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-        }
-
-        .summary-stat .value {
+        input[type="number"] {
+            font-family: 'Space Mono', monospace;
             font-size: 2.5rem;
-            font-weight: bold;
-            color: #f59e0b;
+            font-weight: 700;
+            width: 140px;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid var(--amber);
+            color: var(--amber);
+            text-align: center;
+            border-radius: 0;
+            outline: none;
+            transition: all 0.2s;
         }
 
-        .summary-stat .label {
+        input[type="number"]:focus {
+            box-shadow: 0 0 30px var(--amber-glow);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .input-suffix {
+            font-size: 1rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* Buttons */
+        button {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--amber);
+            background: transparent;
+            color: var(--amber);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--amber);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        button:hover::before {
+            left: 0;
+        }
+
+        button:hover {
+            color: var(--deep-navy);
+        }
+
+        .btn-play {
+            font-size: 1.5rem;
+            padding: 1.5rem 4rem;
+            margin-top: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--amber-glow); }
+            50% { box-shadow: 0 0 40px 10px var(--amber-glow); }
+        }
+
+        .btn-play:hover {
+            animation: none;
+        }
+
+        /* Instructions */
+        .instructions {
             font-size: 0.85rem;
-            color: #64748b;
-            margin-top: 5px;
+            line-height: 1.8;
+            color: var(--muted);
+            max-width: 400px;
+            margin: 0 auto 2rem;
         }
 
-        .hidden { display: none; }
+        .instructions strong {
+            color: var(--cream);
+        }
 
+        /* Phase indicator */
+        .phase {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--amber);
+            border: 1px solid var(--amber);
+            padding: 0.3rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Progress dots */
         .progress {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin: 20px 0;
+            gap: 10px;
+            margin-bottom: 2rem;
         }
 
-        .progress-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+        .dot {
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--muted);
+            background: transparent;
+            transition: all 0.3s;
         }
 
-        .progress-dot.complete { background: #10b981; }
-        .progress-dot.current { background: #f59e0b; animation: pulse 1s infinite; }
+        .dot.complete {
+            background: var(--amber);
+            border-color: var(--amber);
+            box-shadow: 0 0 10px var(--amber-glow);
+        }
 
-        @keyframes pulse {
+        .dot.current {
+            border-color: var(--amber);
+            animation: dotPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+            50% { transform: scale(1.5); background: var(--amber); }
         }
+
+        /* Results */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: rgba(255, 179, 71, 0.2);
+            margin: 2rem 0;
+        }
+
+        .stat {
+            background: var(--slate);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--amber);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Results table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 2rem 0;
+        }
+
+        .results-table th {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 400;
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid rgba(255, 179, 71, 0.2);
+        }
+
+        .results-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match { color: var(--success); }
+        .no-match { color: var(--error); }
+
+        /* Compare box */
+        .compare-box {
+            background: rgba(255, 179, 71, 0.05);
+            border-left: 3px solid var(--amber);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .compare-box h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 0.5rem;
+        }
+
+        .compare-box p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* Button group */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            border-color: var(--muted);
+            color: var(--muted);
+        }
+
+        .btn-secondary::before {
+            background: var(--muted);
+        }
+
+        .btn-secondary:hover {
+            color: var(--deep-navy);
+        }
+
+        .hidden { display: none !important; }
+
+        /* Intro decorative elements */
+        .intro-decoration {
+            position: absolute;
+            font-size: 15rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            color: rgba(255, 179, 71, 0.03);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .intro-decoration.left { left: -5%; top: 20%; }
+        .intro-decoration.right { right: -5%; bottom: 10%; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- INTRO SCREEN -->
+        <!-- INTRO -->
         <div id="intro">
-            <h1>The Mind: Timing Experiment</h1>
-            <div class="card">
+            <h1>The <span class="highlight">Mind</span></h1>
+            <div class="subtitle">Human Timing Experiment</div>
+
+            <div class="experiment-card">
                 <div class="instructions">
-                    <p><strong>The Mind</strong> is a card game where players must play cards 1-100 in order, using only their sense of timing.</p>
+                    <p><strong>The Mind</strong> is a card game where players play cards 1–100 in order, using only their sense of timing.</p>
                     <br>
-                    <p>In this experiment, you'll see a card value and:</p>
+                    <p>You'll see a card and do two things:</p>
                     <br>
-                    <p>1. <strong>Predict</strong>: How many seconds would you wait before playing?</p>
-                    <p>2. <strong>React</strong>: Watch time pass, click when you'd actually play.</p>
+                    <p><strong>1. Predict</strong> — How long would you wait?</p>
+                    <p><strong>2. React</strong> — Watch time pass. Click when ready.</p>
                     <br>
-                    <p>We're measuring if your prediction matches your reaction.</p>
+                    <p>We measure if your prediction matches your action.</p>
                 </div>
-                <button class="btn-primary" onclick="startExperiment()">Start Experiment</button>
+
+                <button onclick="startExperiment()">Begin Experiment</button>
+
+                <p style="margin-top: 2rem; font-size: 0.7rem; color: var(--muted);">
+                    10 trials · ~3 minutes · keyboard: Enter, Space
+                </p>
             </div>
-            <p style="color: #64748b; font-size: 0.85rem; margin-top: 20px;">
-                10 trials, ~3 minutes total
-            </p>
         </div>
 
-        <!-- PREDICTION PHASE -->
+        <!-- PREDICTION -->
         <div id="prediction" class="hidden">
-            <div class="phase-indicator">Phase 1: Prediction</div>
-            <div class="progress" id="progress"></div>
-            <div class="card">
-                <p style="color: #64748b; margin-bottom: 10px;">Your card:</p>
-                <div class="card-value" id="card-value">42</div>
-                <div class="instructions">
-                    <p>Imagine no cards have been played yet.</p>
-                    <p>How many seconds would you wait before playing this card?</p>
+            <div class="phase">Phase 1 — Predict</div>
+            <div class="progress" id="progress1"></div>
+
+            <div class="experiment-card">
+                <div class="playing-card">
+                    <span class="corner top" id="corner1">—</span>
+                    <span class="value" id="cardValue1">42</span>
+                    <span class="corner bottom" id="corner2">—</span>
                 </div>
-                <div style="margin-top: 20px;">
-                    <input type="number" id="prediction-input" min="0" max="30" step="0.5" placeholder="0">
-                    <span style="color: #64748b;"> seconds</span>
+
+                <div class="instructions" style="margin-bottom: 1rem;">
+                    No cards played yet. How many seconds would you wait?
                 </div>
-                <button class="btn-primary" onclick="submitPrediction()" style="margin-top: 20px;">
-                    Submit & Start Timer
-                </button>
+
+                <div class="input-group">
+                    <input type="number" id="predictionInput" min="0" max="30" step="0.5" placeholder="0" autofocus>
+                    <span class="input-suffix">seconds</span>
+                </div>
+
+                <button onclick="submitPrediction()">Submit → Start Timer</button>
             </div>
         </div>
 
-        <!-- REACTIVE PHASE -->
+        <!-- REACTIVE -->
         <div id="reactive" class="hidden">
-            <div class="phase-indicator">Phase 2: React</div>
+            <div class="phase">Phase 2 — React</div>
             <div class="progress" id="progress2"></div>
-            <div class="card">
-                <p style="color: #64748b; margin-bottom: 10px;">Your card:</p>
-                <div class="card-value" id="card-value2">42</div>
-                <div class="timer" id="timer">0.0</div>
-                <div class="instructions">
-                    <p>Click when you would play this card.</p>
+
+            <div class="experiment-card">
+                <div class="playing-card">
+                    <span class="corner top" id="corner3">—</span>
+                    <span class="value" id="cardValue2">42</span>
+                    <span class="corner bottom" id="corner4">—</span>
                 </div>
-                <button class="btn-play" id="play-btn" onclick="play()">
-                    PLAY CARD
+
+                <div class="timer-container">
+                    <div class="timer" id="timer">0.0</div>
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+
+                <button class="btn-play" id="playBtn" onclick="playCard()">
+                    Play Card
                 </button>
             </div>
         </div>
 
-        <!-- RESULTS SCREEN -->
+        <!-- RESULTS -->
         <div id="results" class="hidden">
-            <h1>Results</h1>
-            <div class="card">
-                <div>
-                    <div class="summary-stat">
-                        <div class="value" id="consistency-score">0%</div>
-                        <div class="label">Consistency<br>(within 2s)</div>
+            <h1>Your <span class="highlight">Results</span></h1>
+            <div class="subtitle">Prediction vs Reaction</div>
+
+            <div class="experiment-card">
+                <div class="results-grid">
+                    <div class="stat">
+                        <div class="stat-value" id="consistencyScore">0%</div>
+                        <div class="stat-label">Consistency</div>
                     </div>
-                    <div class="summary-stat">
-                        <div class="value" id="avg-gap">0s</div>
-                        <div class="label">Average Gap</div>
+                    <div class="stat">
+                        <div class="stat-value" id="avgGap">0s</div>
+                        <div class="stat-label">Avg Gap</div>
                     </div>
-                    <div class="summary-stat">
-                        <div class="value" id="bias">0</div>
-                        <div class="label">Bias<br>(+ = over-predict)</div>
+                    <div class="stat">
+                        <div class="stat-value" id="bias">+0s</div>
+                        <div class="stat-label">Bias</div>
                     </div>
                 </div>
 
@@ -270,53 +581,53 @@
                             <th>Predicted</th>
                             <th>Actual</th>
                             <th>Gap</th>
-                            <th>Match</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody id="results-body"></tbody>
+                    <tbody id="resultsBody"></tbody>
                 </table>
 
-                <div style="margin-top: 30px;">
-                    <button class="btn-secondary" onclick="copyResults()">Copy Data (JSON)</button>
-                    <button class="btn-primary" onclick="restart()">Run Again</button>
+                <div class="compare-box">
+                    <h4>LLM Comparison</h4>
+                    <p>
+                        GPT-4o-mini showed <strong>20% consistency</strong> with a tendency to
+                        <strong>over-predict</strong> wait times — saying it would wait longer
+                        than it actually did when asked moment-by-moment.
+                    </p>
                 </div>
-            </div>
 
-            <div class="card" style="margin-top: 20px; text-align: left;">
-                <h3 style="color: #f59e0b; margin-bottom: 10px;">Compare to LLM</h3>
-                <p style="color: #94a3b8; font-size: 0.9rem;">
-                    GPT-4o-mini showed <strong>20% consistency</strong> and <strong>over-predicted</strong>
-                    wait times (said it would wait longer than it actually did when asked moment-by-moment).
-                </p>
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="copyData()">Copy JSON</button>
+                    <button onclick="restart()">Run Again</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Experiment state
         let trials = [];
         let currentTrial = 0;
-        let totalTrials = 10;
-        let currentCard = 0;
-        let prediction = 0;
+        const TOTAL_TRIALS = 10;
         let timerStart = 0;
         let timerInterval = null;
 
-        // Generate card values (spread across range)
         function generateCards() {
             const cards = [];
-            // Ensure spread: 2 low, 3 low-mid, 3 mid-high, 2 high
-            const ranges = [
-                [1, 20], [1, 20],      // 2 low
-                [21, 45], [21, 45], [21, 45],  // 3 low-mid
-                [46, 75], [46, 75], [46, 75],  // 3 mid-high
-                [76, 100], [76, 100]   // 2 high
-            ];
-            for (let range of ranges) {
-                cards.push(Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0]);
+            const ranges = [[1,15],[10,25],[20,40],[35,55],[45,65],[55,75],[65,85],[75,90],[85,100],[90,100]];
+            for (const [min, max] of ranges) {
+                cards.push(Math.floor(Math.random() * (max - min + 1)) + min);
             }
-            // Shuffle
             return cards.sort(() => Math.random() - 0.5);
+        }
+
+        function updateProgress(id) {
+            const el = document.getElementById(id);
+            el.innerHTML = '';
+            for (let i = 0; i < TOTAL_TRIALS; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i < currentTrial ? ' complete' : i === currentTrial ? ' current' : '');
+                el.appendChild(dot);
+            }
         }
 
         function startExperiment() {
@@ -325,37 +636,22 @@
             showPrediction();
         }
 
-        function updateProgress(containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            for (let i = 0; i < totalTrials; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'progress-dot';
-                if (i < currentTrial) dot.classList.add('complete');
-                if (i === currentTrial) dot.classList.add('current');
-                container.appendChild(dot);
-            }
-        }
-
         function showPrediction() {
-            document.getElementById('intro').classList.add('hidden');
-            document.getElementById('reactive').classList.add('hidden');
-            document.getElementById('results').classList.add('hidden');
+            document.querySelectorAll('#intro, #reactive, #results').forEach(el => el.classList.add('hidden'));
             document.getElementById('prediction').classList.remove('hidden');
 
-            currentCard = trials[currentTrial].card;
-            document.getElementById('card-value').textContent = currentCard;
-            document.getElementById('prediction-input').value = '';
-            document.getElementById('prediction-input').focus();
-
-            updateProgress('progress');
+            const card = trials[currentTrial].card;
+            document.getElementById('cardValue1').textContent = card;
+            document.getElementById('corner1').textContent = card;
+            document.getElementById('corner2').textContent = card;
+            document.getElementById('predictionInput').value = '';
+            document.getElementById('predictionInput').focus();
+            updateProgress('progress1');
         }
 
         function submitPrediction() {
-            const input = document.getElementById('prediction-input');
-            prediction = parseFloat(input.value) || 0;
-            trials[currentTrial].predicted = prediction;
-
+            const val = parseFloat(document.getElementById('predictionInput').value) || 0;
+            trials[currentTrial].predicted = Math.max(0, Math.min(30, val));
             showReactive();
         }
 
@@ -363,98 +659,81 @@
             document.getElementById('prediction').classList.add('hidden');
             document.getElementById('reactive').classList.remove('hidden');
 
-            document.getElementById('card-value2').textContent = currentCard;
+            const card = trials[currentTrial].card;
+            document.getElementById('cardValue2').textContent = card;
+            document.getElementById('corner3').textContent = card;
+            document.getElementById('corner4').textContent = card;
             document.getElementById('timer').textContent = '0.0';
-            document.getElementById('play-btn').disabled = false;
-
+            document.getElementById('timerBar').style.setProperty('--progress', '0%');
+            document.getElementById('playBtn').disabled = false;
             updateProgress('progress2');
 
-            // Start timer
             timerStart = Date.now();
             timerInterval = setInterval(() => {
                 const elapsed = (Date.now() - timerStart) / 1000;
                 document.getElementById('timer').textContent = elapsed.toFixed(1);
-
-                // Auto-stop at 30s
-                if (elapsed >= 30) {
-                    play();
-                }
-            }, 100);
+                document.getElementById('timerBar').style.setProperty('--progress', Math.min(100, elapsed / 30 * 100) + '%');
+                if (elapsed >= 30) playCard();
+            }, 50);
         }
 
-        function play() {
+        function playCard() {
             clearInterval(timerInterval);
-            const elapsed = (Date.now() - timerStart) / 1000;
-            trials[currentTrial].actual = Math.round(elapsed * 10) / 10;
+            trials[currentTrial].actual = Math.round((Date.now() - timerStart) / 100) / 10;
+            document.getElementById('playBtn').disabled = true;
 
-            document.getElementById('play-btn').disabled = true;
-
-            // Brief pause then next trial
             setTimeout(() => {
                 currentTrial++;
-                if (currentTrial < totalTrials) {
-                    showPrediction();
-                } else {
-                    showResults();
-                }
-            }, 500);
+                if (currentTrial < TOTAL_TRIALS) showPrediction();
+                else showResults();
+            }, 400);
         }
 
         function showResults() {
             document.getElementById('reactive').classList.add('hidden');
             document.getElementById('results').classList.remove('hidden');
 
-            // Calculate stats
-            let consistent = 0;
-            let totalGap = 0;
-            let totalBias = 0;
-
-            const tbody = document.getElementById('results-body');
+            let consistent = 0, totalGap = 0, totalBias = 0;
+            const tbody = document.getElementById('resultsBody');
             tbody.innerHTML = '';
 
-            for (let trial of trials) {
-                const gap = Math.abs(trial.predicted - trial.actual);
-                const bias = trial.predicted - trial.actual;
-                const isConsistent = gap <= 2;
-
-                if (isConsistent) consistent++;
+            for (const t of trials) {
+                const gap = Math.abs(t.predicted - t.actual);
+                const bias = t.predicted - t.actual;
+                const ok = gap <= 2;
+                if (ok) consistent++;
                 totalGap += gap;
                 totalBias += bias;
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${trial.card}</td>
-                    <td>${trial.predicted.toFixed(1)}s</td>
-                    <td>${trial.actual.toFixed(1)}s</td>
+                    <td>${t.card}</td>
+                    <td>${t.predicted.toFixed(1)}s</td>
+                    <td>${t.actual.toFixed(1)}s</td>
                     <td>${gap.toFixed(1)}s</td>
-                    <td class="${isConsistent ? 'consistent' : 'inconsistent'}">
-                        ${isConsistent ? '✓' : '✗'}
-                    </td>
+                    <td class="${ok ? 'match' : 'no-match'}">${ok ? '✓' : '✗'}</td>
                 `;
                 tbody.appendChild(row);
             }
 
-            const consistencyPct = Math.round(100 * consistent / totalTrials);
-            const avgGap = totalGap / totalTrials;
-            const avgBias = totalBias / totalTrials;
-
-            document.getElementById('consistency-score').textContent = consistencyPct + '%';
-            document.getElementById('avg-gap').textContent = avgGap.toFixed(1) + 's';
+            document.getElementById('consistencyScore').textContent = Math.round(100 * consistent / TOTAL_TRIALS) + '%';
+            document.getElementById('avgGap').textContent = (totalGap / TOTAL_TRIALS).toFixed(1) + 's';
+            const avgBias = totalBias / TOTAL_TRIALS;
             document.getElementById('bias').textContent = (avgBias >= 0 ? '+' : '') + avgBias.toFixed(1) + 's';
         }
 
-        function copyResults() {
+        function copyData() {
             const data = {
                 timestamp: new Date().toISOString(),
-                trials: trials,
+                trials,
                 summary: {
-                    consistency: trials.filter(t => Math.abs(t.predicted - t.actual) <= 2).length / trials.length,
-                    avgGap: trials.reduce((s, t) => s + Math.abs(t.predicted - t.actual), 0) / trials.length,
-                    avgBias: trials.reduce((s, t) => s + (t.predicted - t.actual), 0) / trials.length
+                    consistency: trials.filter(t => Math.abs(t.predicted - t.actual) <= 2).length / TOTAL_TRIALS,
+                    avgGap: trials.reduce((s, t) => s + Math.abs(t.predicted - t.actual), 0) / TOTAL_TRIALS,
+                    avgBias: trials.reduce((s, t) => s + (t.predicted - t.actual), 0) / TOTAL_TRIALS
                 }
             };
             navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-            alert('Results copied to clipboard!');
+            alert('Copied to clipboard!');
         }
 
         function restart() {
@@ -462,14 +741,13 @@
             document.getElementById('intro').classList.remove('hidden');
         }
 
-        // Allow Enter key to submit
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', e => {
             if (e.key === 'Enter' && !document.getElementById('prediction').classList.contains('hidden')) {
                 submitPrediction();
             }
             if (e.key === ' ' && !document.getElementById('reactive').classList.contains('hidden')) {
                 e.preventDefault();
-                play();
+                playCard();
             }
         });
     </script>

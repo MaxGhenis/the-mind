@@ -1,0 +1,44 @@
+.container {
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.timer {
+  font-family: 'Space Mono', monospace;
+  font-size: 6rem;
+  font-weight: 700;
+  color: var(--amber);
+  text-shadow:
+    0 0 20px var(--amber-glow),
+    0 0 40px var(--amber-glow),
+    0 0 80px var(--amber-glow);
+  letter-spacing: -0.05em;
+  position: relative;
+}
+
+.timer::after {
+  content: 's';
+  font-size: 1.5rem;
+  opacity: 0.5;
+  margin-left: 5px;
+  vertical-align: super;
+}
+
+.bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 179, 71, 0.1);
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--amber);
+  box-shadow: 0 0 20px var(--amber-glow);
+  transition: width 0.1s linear;
+}

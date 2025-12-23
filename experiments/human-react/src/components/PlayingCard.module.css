@@ -1,0 +1,51 @@
+.card {
+  width: 180px;
+  height: 260px;
+  margin: 2rem auto;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #2a2a3e 0%, #1a1a28 100%);
+  border: 2px solid var(--amber);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 40px var(--amber-glow),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: cardFloat 4s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0) rotateX(5deg); }
+  50% { transform: translateY(-10px) rotateX(5deg); }
+}
+
+.value {
+  font-family: 'Syne', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--amber);
+  text-shadow: 0 0 30px var(--amber-glow);
+}
+
+.corner {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--amber);
+  opacity: 0.6;
+}
+
+.top {
+  top: 12px;
+  left: 14px;
+}
+
+.bottom {
+  bottom: 12px;
+  right: 14px;
+  transform: rotate(180deg);
+}
