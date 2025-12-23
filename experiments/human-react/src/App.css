@@ -275,3 +275,26 @@ button:disabled {
 .btnSecondary:hover {
   color: var(--deep-navy);
 }
+
+/* Game context display */
+.gameContext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contextLabel {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contextValue {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--amber);
+  text-shadow: 0 0 20px var(--amber-glow);
+}

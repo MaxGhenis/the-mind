@@ -1,5 +1,6 @@
 export interface Trial {
   card: number;
+  players: number;  // total players including you (2-4)
   predicted: number | null;
   actual: number | null;
 }

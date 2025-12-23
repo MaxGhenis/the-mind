@@ -6,18 +6,35 @@ import { ProgressDots } from './components/ProgressDots';
 import { Timer } from './components/Timer';
 import { useTimer } from './hooks/useTimer';
 
-const TOTAL_TRIALS = 10;
+const TOTAL_TRIALS = 12;  // 4 cards × 3 player counts
 const MAX_TIME = 30;
 
-function generateCards(): number[] {
-  const ranges: [number, number][] = [
-    [1, 15], [10, 25], [20, 40], [35, 55], [45, 65],
-    [55, 75], [65, 85], [75, 90], [85, 100], [90, 100]
+interface TrialConfig {
+  card: number;
+  players: number;
+}
+
+function generateTrials(): TrialConfig[] {
+  // Test same cards across different player counts
+  const cardRanges: [number, number][] = [
+    [5, 20],    // low cards
+    [30, 50],   // mid-low
+    [50, 70],   // mid-high
+    [80, 95],   // high cards
   ];
-  const cards = ranges.map(([min, max]) =>
-    Math.floor(Math.random() * (max - min + 1)) + min
-  );
-  return cards.sort(() => Math.random() - 0.5);
+
+  const playerCounts = [2, 3, 4];
+  const trials: TrialConfig[] = [];
+
+  for (const [min, max] of cardRanges) {
+    const card = Math.floor(Math.random() * (max - min + 1)) + min;
+    for (const players of playerCounts) {
+      trials.push({ card, players });
+    }
+  }
+
+  // Shuffle trials
+  return trials.sort(() => Math.random() - 0.5);
 }
 
 function App() {
@@ -30,8 +47,13 @@ function App() {
   const { elapsed, isRunning, start: startTimer, stop: stopTimer, reset: resetTimer } = useTimer(MAX_TIME);
 
   const startExperiment = useCallback(() => {
-    const cards = generateCards();
-    setTrials(cards.map(card => ({ card, predicted: null, actual: null })));
+    const configs = generateTrials();
+    setTrials(configs.map(({ card, players }) => ({
+      card,
+      players,
+      predicted: null,
+      actual: null
+    })));
     setCurrentTrial(0);
     setPhase('prediction');
     setPredictionValue('');
@@ -170,7 +192,7 @@ function App() {
           <button onClick={startExperiment}>Begin Experiment</button>
 
           <p style={{ marginTop: '2rem', fontSize: '0.7rem', color: 'var(--muted)' }}>
-            10 trials · ~3 minutes · keyboard: Enter, Space
+            12 trials · ~4 minutes · keyboard: Enter, Space
           </p>
         </div>
       </div>
@@ -179,6 +201,7 @@ function App() {
 
   if (phase === 'prediction') {
     const currentCard = trials[currentTrial]?.card ?? 0;
+    const currentPlayers = trials[currentTrial]?.players ?? 2;
 
     return (
       <div className="container">
@@ -186,6 +209,11 @@ function App() {
         <ProgressDots total={TOTAL_TRIALS} current={currentTrial} />
 
         <div className="experimentCard">
+          <div className="gameContext">
+            <span className="contextLabel">Players</span>
+            <span className="contextValue">{currentPlayers}</span>
+          </div>
+
           <PlayingCard value={currentCard} />
 
           <div className="instructions" style={{ marginBottom: '1rem' }}>
@@ -214,6 +242,7 @@ function App() {
 
   if (phase === 'reactive') {
     const currentCard = trials[currentTrial]?.card ?? 0;
+    const currentPlayers = trials[currentTrial]?.players ?? 2;
 
     return (
       <div className="container">
@@ -221,6 +250,11 @@ function App() {
         <ProgressDots total={TOTAL_TRIALS} current={currentTrial} />
 
         <div className="experimentCard">
+          <div className="gameContext">
+            <span className="contextLabel">Players</span>
+            <span className="contextValue">{currentPlayers}</span>
+          </div>
+
           <PlayingCard value={currentCard} />
           <Timer elapsed={elapsed} maxTime={MAX_TIME} />
           <button className="btnPlay" onClick={playCard}>
@@ -261,6 +295,7 @@ function App() {
             <thead>
               <tr>
                 <th>Card</th>
+                <th>Players</th>
                 <th>Predicted</th>
                 <th>Actual</th>
                 <th>Gap</th>
@@ -275,6 +310,7 @@ function App() {
                 return (
                   <tr key={i}>
                     <td>{t.card}</td>
+                    <td>{t.players}p</td>
                     <td>{t.predicted.toFixed(1)}s</td>
                     <td>{t.actual.toFixed(1)}s</td>
                     <td>{gap.toFixed(1)}s</td>
