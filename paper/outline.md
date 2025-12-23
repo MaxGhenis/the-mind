@@ -32,13 +32,15 @@
 1. Can LLMs coordinate implicitly through timing strategies?
 2. **Do same-model teams succeed trivially via shared internal biases?** (cf. convergence-game)
 3. How well do LLMs adapt to cross-model teammates with different timing patterns?
-4. Can agents learn/adapt across rounds?
-5. What emergent timing strategies arise?
+4. **Are LLMs consistent between prediction and reactive decision-making?** (Novel consistency test)
+5. Can agents learn/adapt across rounds?
+6. What emergent timing strategies arise?
 
 **1.3 Contributions**
 - First LLM simulation of The Mind card game
 - Novel benchmark separating "shared bias" from "true coordination"
 - Cross-model coordination analysis
+- **Prompting strategy comparison revealing LLM internal consistency**
 - Open-source experimental framework
 
 ---
@@ -85,16 +87,40 @@
 - Output: JSON with wait_seconds, reasoning, confidence
 - Optional memory for cross-round learning
 
-*3.1.3 Models Under Study*
+*3.1.3 Prompting Strategies* **(KEY METHODOLOGICAL INNOVATION)**
+
+Two approaches testing LLM internal consistency:
+
+**Strategy A: Prediction-Based**
+- Prompt: "How long would you wait before playing your card?"
+- LLM outputs wait_seconds upfront
+- Decision made once at start of turn
+- Tests: Planning and prediction ability
+
+**Strategy B: Reactive-Based**
+- Prompt at each timestep: "[X seconds have elapsed] Do you play your card now?"
+- LLM answers yes/no at each discrete time interval
+- Decision made continuously
+- Tests: Real-time reasoning and impulse control
+
+**Research Insight:** If an LLM says "I would wait 6 seconds" (Prediction) but then at t=6s says "No, not yet" (Reactive), this reveals **internal inconsistency** - the model lacks a coherent internal representation of timing/coordination. Consistency between strategies indicates true decision-making coherence.
+
+This comparison tests whether LLM decisions are:
+- **Coherent**: Same outcome regardless of prompting format
+- **Context-dependent**: Different answers based on how the question is framed
+- **Stable**: Consistent internal model vs ad-hoc reasoning
+
+*3.1.4 Models Under Study*
 | Provider | Models |
 |----------|--------|
 | OpenAI | gpt-4o, gpt-4o-mini |
 | Anthropic | claude-3.5-sonnet, claude-3-haiku |
 | Google | gemini-1.5-pro, gemini-1.5-flash |
 
-*3.1.4 Experimental Conditions*
+*3.1.5 Experimental Conditions*
 - **Homogeneous teams** (baseline - expected high due to shared bias)
 - **Heterogeneous teams** (true coordination test)
+- **Prompting strategies** (prediction vs reactive)
 - With/without memory
 - Temperature variations
 
@@ -114,6 +140,12 @@
 - **Same-model baseline** vs **cross-model performance gap**
 - Adaptation rate: how quickly agents calibrate to teammates
 - Timing convergence over rounds
+
+*3.2.4 Consistency Metrics (Novel)*
+- **Prediction-Reactive Gap**: |predicted_wait_time - actual_reactive_play_time|
+- **Consistency Score**: % of decisions where prediction matches reactive behavior (±1 second tolerance)
+- **Directional Bias**: Do models consistently over-predict or under-predict their wait times?
+- **Consistency by card value**: Does consistency vary with card difficulty (low/mid/high values)?
 
 **3.3 Statistical Analysis**
 - Bootstrap confidence intervals
@@ -139,9 +171,35 @@
 - Memory vs no-memory comparison
 - Evidence of Theory of Mind?
 
-**4.4 Model Rankings**
+**4.4 Prompting Strategy Comparison** (KEY RESULT - TESTS INTERNAL CONSISTENCY)
+
+*4.4.1 Prediction vs Reactive Performance*
+- Do models perform better with prediction or reactive prompting?
+- Success rate comparison across strategies
+- Which strategy leads to better coordination?
+
+*4.4.2 Internal Consistency Analysis*
+- **Consistency scores by model**: Which LLMs have coherent internal timing models?
+- **Prediction-Reactive scatter plots**: Visual test of consistency
+  - Perfect consistency = points on y=x diagonal
+  - Systematic bias = consistent offset from diagonal
+  - Random scatter = no internal coherence
+- **Directional patterns**: Do models over-predict (say longer wait than they act) or under-predict?
+
+*4.4.3 Consistency by Context*
+- Does consistency vary by card value? (Low cards: 1-33, Mid: 34-66, High: 67-100)
+- Effect of game state on consistency
+- Team composition impact on consistency
+
+*4.4.4 Theoretical Implications*
+- **High consistency** → Model has stable internal representation of timing/coordination
+- **Low consistency** → Decisions are context-dependent, no coherent model
+- **Systematic bias** → Model can predict but struggles with real-time execution (or vice versa)
+
+**4.5 Model Rankings**
 - Performance hierarchy
 - Which models adapt best to others?
+- Which models show highest internal consistency?
 
 ---
 
@@ -152,18 +210,26 @@
 - Cross-model experiments as more valid benchmark
 - Implications for multi-agent system design
 
-**5.2 Emergent Strategies**
+**5.2 Internal Consistency and Decision-Making Coherence**
+- What does consistency reveal about LLM cognition?
+- Prediction vs reactive as probe of internal representations
+- Implications for LLM reliability in sequential decision tasks
+- Comparison to human consistency in similar tasks
+
+**5.3 Emergent Strategies**
 - Linear timing was not explicitly taught
 - Robustness of emergent conventions
+- Strategy differences between prediction and reactive modes
 
-**5.3 Theory of Mind Implications**
+**5.4 Theory of Mind Implications**
 - Evidence for/against ToM in timing decisions
 - Comparison to Hanabi research
 
-**5.4 Limitations**
+**5.5 Limitations**
 - API determinism challenges
 - Limited model diversity
 - Simulated timing vs real-time
+- Discrete timesteps in reactive mode may not capture true continuous reasoning
 
 ---
 
@@ -171,7 +237,8 @@
 - First LLM simulation of The Mind
 - Same-model coordination ≠ true coordination ability
 - Cross-model adaptation as better benchmark
-- Future work: human-AI teams, real-time APIs
+- **Prompting strategy comparison reveals internal consistency (or lack thereof)**
+- Future work: human-AI teams, real-time APIs, finer-grained consistency tests
 
 ---
 
@@ -184,7 +251,10 @@
 | Fig 3 | Timing strategy scatter: wait_time vs card_value by model |
 | Fig 4 | Adaptation curves: cross-model performance over rounds |
 | Fig 5 | Model pair heatmap: success rates for all combinations |
-| Fig 6 | Failure mode analysis |
+| Fig 6 | **Prediction vs Reactive scatter plot** (KEY CONSISTENCY FIGURE) - x-axis: predicted wait time, y-axis: actual reactive play time, by model |
+| Fig 7 | **Consistency scores by model** - Bar chart showing % consistency (±1s tolerance) |
+| Fig 8 | **Directional bias analysis** - Distribution of (predicted - reactive) by model |
+| Fig 9 | Failure mode analysis |
 
 ---
 
@@ -194,16 +264,29 @@
 |------------|---------|--------------|
 | Same-model baselines | Establish shared-bias performance | 100/model |
 | Cross-model pairs | True coordination test | 50/pair |
+| **Prediction vs Reactive (same setup)** | **Test internal consistency** | **50/model** |
+| **Prediction vs Reactive (cross-model)** | **Consistency under coordination stress** | **25/pair** |
 | Memory ablation | Learning effect | 100 with/without |
 | Player scaling | 2-6 players | 50/config |
 
 **Priority order:**
-1. GPT-4o vs GPT-4o (baseline)
-2. GPT-4o vs Claude 3.5 (cross-model)
-3. All homogeneous baselines
-4. All heterogeneous pairs
-5. Memory ablation
-6. Player scaling
+1. GPT-4o vs GPT-4o (baseline) - **both prompting strategies**
+2. **GPT-4o prediction vs reactive consistency analysis**
+3. GPT-4o vs Claude 3.5 (cross-model)
+4. All homogeneous baselines
+5. **All models: prediction vs reactive consistency**
+6. All heterogeneous pairs
+7. Memory ablation
+8. Player scaling
+
+**Consistency Experiment Details:**
+- Run identical game setups with both prompting strategies
+- Compare predicted wait times to actual reactive play times
+- Calculate consistency metrics for each model
+- Analyze whether consistency varies by:
+  - Card value (low/mid/high)
+  - Game state (early/late in round)
+  - Team composition (homogeneous/heterogeneous)
 
 ---
 

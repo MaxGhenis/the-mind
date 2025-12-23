@@ -7,6 +7,11 @@ from uuid import uuid4
 
 from themind.core.card import Card
 from themind.core.game_state import GameState, RoundInfo
+from themind.prompts.prediction import (
+    get_prediction_system_prompt,
+    build_prediction_user_prompt,
+    parse_prediction_response,
+)
 
 
 @dataclass
@@ -61,7 +66,7 @@ class Player:
 
 class LLMPlayer(Player):
     """LLM-powered player for The Mind game."""
-    
+
     def __init__(
         self,
         name: str,
@@ -70,13 +75,22 @@ class LLMPlayer(Player):
         player_id: Optional[str] = None,
         use_memory: bool = False,
         temperature: float = 0.7,
+        prompting_strategy: str = "prediction",
     ) -> None:
         super().__init__(name, player_id)
         self.model = model
         self.client = client
         self.use_memory = use_memory
         self.temperature = temperature
+        self.prompting_strategy = prompting_strategy
         self.memory: List[RoundInfo] = []
+
+        # Validate prompting strategy
+        if prompting_strategy != "prediction":
+            raise ValueError(
+                f"Unsupported prompting strategy: {prompting_strategy}. "
+                "Currently only 'prediction' is supported."
+            )
     
     def add_memory(self, round_info: RoundInfo) -> None:
         """Add a round to memory for learning."""
@@ -87,82 +101,44 @@ class LLMPlayer(Player):
                 self.memory = self.memory[-10:]
     
     async def decide(self, game_state: GameState) -> PlayerDecision:
-        """Decide how long to wait before playing lowest card."""
+        """Decide how long to wait before playing lowest card.
+
+        Args:
+            game_state: Current state of the game
+
+        Returns:
+            PlayerDecision with wait time, reasoning, and confidence
+
+        Raises:
+            ValueError: If hand is empty
+        """
         if not self.hand:
             raise ValueError("No cards in hand")
-        
-        prompt = self._build_prompt(game_state)
-        
+
+        # Build prompts using the prediction strategy module
+        system_prompt = get_prediction_system_prompt()
+        user_prompt = build_prediction_user_prompt(
+            game_state=game_state,
+            my_card=self.lowest_card,
+            memory=self.memory if self.use_memory else None,
+        )
+
+        # Call LLM
         response = await self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": self._get_system_prompt()},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
             ],
             temperature=self.temperature,
             response_format={"type": "json_object"}
         )
-        
-        decision_data = json.loads(response.choices[0].message.content)
-        
+
+        # Parse response using the prediction module
+        decision_data = parse_prediction_response(response.choices[0].message.content)
+
         return PlayerDecision(
-            wait_seconds=float(decision_data["wait_seconds"]),
+            wait_seconds=decision_data["wait_seconds"],
             reasoning=decision_data["reasoning"],
-            confidence=decision_data.get("confidence", 0.5)
+            confidence=decision_data["confidence"]
         )
-    
-    def _get_system_prompt(self) -> str:
-        """Get the system prompt for the LLM."""
-        return """You are playing The Mind, a cooperative card game where players must play cards in ascending order without communication.
-
-You must decide how long to wait before playing your lowest card based on:
-1. Your card's value (1-100)
-2. Cards already played
-3. Time elapsed
-4. Number of players remaining
-
-Respond with JSON:
-{
-    "wait_seconds": <float between 0 and 30>,
-    "reasoning": "<your strategic reasoning>",
-    "confidence": <float between 0 and 1>
-}
-
-Strategy tips:
-- Lower cards should be played sooner
-- Higher cards should wait longer
-- Consider the gap between your card and the last played card
-- Account for other players who might have lower cards"""
-    
-    def _build_prompt(self, game_state: GameState) -> str:
-        """Build the prompt for the LLM."""
-        prompt_parts = [
-            f"Round {game_state.round_number}",
-            f"Your lowest card: {self.lowest_card.value}",
-            f"Cards played so far: {[c.value for c in game_state.cards_played]}",
-            f"Time elapsed: {game_state.time_elapsed:.1f} seconds",
-            f"Players remaining: {game_state.players_remaining}/{game_state.total_players}",
-        ]
-        
-        if self.use_memory and self.memory:
-            memory_summary = self._summarize_memory()
-            prompt_parts.append(f"\nLearning from previous rounds:\n{memory_summary}")
-        
-        prompt_parts.append("\nHow long should you wait before playing your card?")
-        
-        return "\n".join(prompt_parts)
-    
-    def _summarize_memory(self) -> str:
-        """Summarize memory from previous rounds."""
-        if not self.memory:
-            return "No previous rounds"
-        
-        summaries = []
-        for round_info in self.memory[-3:]:  # Last 3 rounds
-            status = "SUCCESS" if round_info.success else "FAILURE"
-            summaries.append(
-                f"Round {round_info.round_number}: {status} - "
-                f"Cards played: {round_info.cards_played}"
-            )
-        
-        return "\n".join(summaries)
