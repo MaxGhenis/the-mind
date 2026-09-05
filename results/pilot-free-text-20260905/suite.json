@@ -1,0 +1,183 @@
+{
+  "name": "Exploratory two-provider instrument pilot",
+  "notes": "Six matched deals per condition. This validates requests and records exploratory behavior; it is far too small for model rankings or adaptation claims. Model availability checked against provider model-list APIs on September 5, 2026; these are economical pilot choices, not claims of latest/frontier models. No retries or tuning within the scored suite.",
+  "seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005
+  ],
+  "config": {
+    "players": 2,
+    "cards_per_player": 2
+  },
+  "conditions": [
+    {
+      "name": "AA",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        },
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "AB",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "BA",
+      "policies": [
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        },
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "BB",
+      "policies": [
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "AA_convention",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60,
+          "convention": "proportional"
+        },
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60,
+          "convention": "proportional"
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "BB_convention",
+      "policies": [
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60,
+          "convention": "proportional"
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60,
+          "convention": "proportional"
+        }
+      ],
+      "config": {}
+    },
+    {
+      "name": "AB_feedback",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        }
+      ],
+      "config": {
+        "mode": "feedback"
+      }
+    },
+    {
+      "name": "AB_history_times_hidden",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60
+        }
+      ],
+      "config": {
+        "mode": "feedback",
+        "feedback": "cards_only"
+      }
+    }
+  ],
+  "contrasts": {
+    "cross_play_compatibility": {
+      "AB": 0.5,
+      "BA": 0.5,
+      "AA": -0.5,
+      "BB": -0.5
+    },
+    "historical_timestamps": {
+      "AB_feedback": 1,
+      "AB_history_times_hidden": -1
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "package_version": "0.2.0",
+  "started_at": "2026-09-05T23:14:48.365451+00:00",
+  "python": "3.14.4",
+  "status": "complete",
+  "maximum_api_calls": 168,
+  "suite_sha256": "f707ca68022045b02ef3aedfc01d553dab33040aaa9cbc0691bf330bdfa20326",
+  "git_head": "cf8ec352ec53dbff4cfe087cf17c1209e56d2424",
+  "git_dirty": true,
+  "source_sha256": {
+    "themind/__init__.py": "208f282365b965917b6a6d73a8ec606067b7a933e632f9c9bdd0ee0a0a6ad22f",
+    "themind/__main__.py": "3ef954b5968245793910b795858298c4198344d6313394143b7ebda53b1e9020",
+    "themind/analysis.py": "bd9d1cc2ffe0efbc55fd4fa68b4b3695a59afb6438bb780ff2e6bd20f0a0bfdd",
+    "themind/cli.py": "df7883b9a3ab60cfe6f4e3dd8bf71abaab032fb132d3eb01ac6e497a24117751",
+    "themind/engine.py": "113774edc387c7a14601f807d0cbb2e431163200a4d1e6d011732753b0c4440c",
+    "themind/policies.py": "129d59522f6853a04357d813956deb4844212d8a2d966494602d95802c03d44e",
+    "themind/report.py": "9144c5687928addd2c1250b1b1a825b4ffde108041e612410e21b61660deec21",
+    "themind/runner.py": "b7d9419423190fb44623dbe19dc64c6933b1cb38eb2d5c71bc772165bf25df01"
+  },
+  "completed_at": "2026-09-05T23:15:52.646248+00:00",
+  "artifact_sha256": {
+    "rounds.jsonl": "ea11a16f91b9519014d8a06c27cd3dc9084fb170599b89c59dcb70d4e6b773a5",
+    "summary.json": "c4df88165b4d0e5a070c9665055ddaa93576c89f8fc13f83b6826a815f30cc9d",
+    "report.html": "4ee9850ce0f71acb4c9bddb3c65ed7a0ed99bd6905298a0cd7547ed7a7caa794"
+  }
+}
