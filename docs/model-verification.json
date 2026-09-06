@@ -1,0 +1,16 @@
+{
+  "checked_date": "2026-09-05",
+  "purpose": "Verify availability of chosen economical pilot snapshots, not establish latest model status",
+  "providers": [
+    {
+      "models_endpoint": "https://api.openai.com/v1/models",
+      "verified_model_id": "gpt-5.4-mini-2026-03-17",
+      "structured_output_docs": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+    },
+    {
+      "models_endpoint": "https://api.anthropic.com/v1/models",
+      "verified_model_id": "claude-haiku-4-5-20251001",
+      "structured_output_docs": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+    }
+  ]
+}

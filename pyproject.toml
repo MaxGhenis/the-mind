@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "themind"
+version = "0.2.0"
+description = "A controlled benchmark for convention compatibility in numerical coordination"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "CC0-1.0"}
+authors = [{name = "Max Ghenis"}]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.9"]
+legacy = ["openai", "streamlit"]
+
+[project.scripts]
+themind = "themind.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["themind*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

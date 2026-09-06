@@ -1,0 +1,204 @@
+{
+  "name": "Exploratory two-provider instrument pilot",
+  "conditions": {
+    "AA": {
+      "attempted": 6,
+      "valid": 6,
+      "successes": 2,
+      "status_counts": {
+        "misorder": 4,
+        "success": 2
+      },
+      "completion_rate_all_attempts": 0.3333333333333333,
+      "completion_ci95_all_attempts": [
+        0.09677141110578041,
+        0.700006684861608
+      ],
+      "completion_rate_valid_only": 0.3333333333333333,
+      "completion_ci95_valid_only": [
+        0.09677141110578041,
+        0.700006684861608
+      ],
+      "infrastructure_failure_rate": 0.0,
+      "mean_correct_prefix": 1.5,
+      "mean_collisions": 0.3333333333333333
+    },
+    "AB": {
+      "attempted": 6,
+      "valid": 0,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 6
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": null,
+      "completion_ci95_valid_only": null,
+      "infrastructure_failure_rate": 1.0,
+      "mean_correct_prefix": 0,
+      "mean_collisions": 0
+    },
+    "BA": {
+      "attempted": 6,
+      "valid": 1,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 5,
+        "misorder": 1
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": 0.0,
+      "completion_ci95_valid_only": [
+        0.0,
+        0.7934506856227626
+      ],
+      "infrastructure_failure_rate": 0.8333333333333334,
+      "mean_correct_prefix": 0.16666666666666666,
+      "mean_collisions": 0
+    },
+    "BB": {
+      "attempted": 6,
+      "valid": 0,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 6
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": null,
+      "completion_ci95_valid_only": null,
+      "infrastructure_failure_rate": 1.0,
+      "mean_correct_prefix": 0,
+      "mean_collisions": 0
+    },
+    "AA_convention": {
+      "attempted": 6,
+      "valid": 6,
+      "successes": 6,
+      "status_counts": {
+        "success": 6
+      },
+      "completion_rate_all_attempts": 1.0,
+      "completion_ci95_all_attempts": [
+        0.6096657120978346,
+        1.0
+      ],
+      "completion_rate_valid_only": 1.0,
+      "completion_ci95_valid_only": [
+        0.6096657120978346,
+        1.0
+      ],
+      "infrastructure_failure_rate": 0.0,
+      "mean_correct_prefix": 4,
+      "mean_collisions": 0
+    },
+    "BB_convention": {
+      "attempted": 6,
+      "valid": 0,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 6
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": null,
+      "completion_ci95_valid_only": null,
+      "infrastructure_failure_rate": 1.0,
+      "mean_correct_prefix": 0,
+      "mean_collisions": 0
+    },
+    "AB_feedback": {
+      "attempted": 6,
+      "valid": 1,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 5,
+        "misorder": 1
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": 0.0,
+      "completion_ci95_valid_only": [
+        0.0,
+        0.7934506856227626
+      ],
+      "infrastructure_failure_rate": 0.8333333333333334,
+      "mean_correct_prefix": 0.5,
+      "mean_collisions": 0
+    },
+    "AB_history_times_hidden": {
+      "attempted": 6,
+      "valid": 1,
+      "successes": 0,
+      "status_counts": {
+        "invalid_response": 5,
+        "misorder": 1
+      },
+      "completion_rate_all_attempts": 0.0,
+      "completion_ci95_all_attempts": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ],
+      "completion_rate_valid_only": 0.0,
+      "completion_ci95_valid_only": [
+        0.0,
+        0.7934506856227626
+      ],
+      "infrastructure_failure_rate": 0.8333333333333334,
+      "mean_correct_prefix": 0,
+      "mean_collisions": 0
+    }
+  },
+  "contrasts": {
+    "cross_play_compatibility": {
+      "weights": {
+        "AB": 0.5,
+        "BA": 0.5,
+        "AA": -0.5,
+        "BB": -0.5
+      },
+      "paired_deals": 6,
+      "blocks_with_infrastructure_failure": 6,
+      "difference_all_attempts": -0.16666666666666666,
+      "paired_bootstrap_ci95": [
+        -0.3333333333333333,
+        0.0
+      ],
+      "bootstrap_seed": 0,
+      "bootstrap_samples": 2000,
+      "interpretation": "descriptive pilot; API failures confound behavioral comparisons"
+    },
+    "historical_timestamps": {
+      "weights": {
+        "AB_feedback": 1,
+        "AB_history_times_hidden": -1
+      },
+      "paired_deals": 6,
+      "blocks_with_infrastructure_failure": 5,
+      "difference_all_attempts": 0,
+      "paired_bootstrap_ci95": [
+        0,
+        0
+      ],
+      "bootstrap_seed": 0,
+      "bootstrap_samples": 2000,
+      "interpretation": "descriptive pilot; API failures confound behavioral comparisons"
+    }
+  }
+}

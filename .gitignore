@@ -162,3 +162,7 @@ cython_debug/
 #.idea/
 
 .streamlit/secrets.toml
+
+# Scratch experiments; selected auditable runs go in results/.
+runs/
+.ruff_cache/

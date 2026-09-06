@@ -1,0 +1,32 @@
+{
+  "name": "Unscored native structured-output smoke",
+  "notes": "Fresh integration seed outside both pilots. Two cards per seat.",
+  "seeds": [
+    9998
+  ],
+  "config": {
+    "players": 2,
+    "cards_per_player": 2
+  },
+  "conditions": [
+    {
+      "name": "providers",
+      "policies": [
+        {
+          "kind": "openai",
+          "model": "gpt-5.4-mini-2026-03-17",
+          "max_tokens": 2048,
+          "timeout": 60,
+          "structured_output": true
+        },
+        {
+          "kind": "anthropic",
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 1024,
+          "timeout": 60,
+          "structured_output": true
+        }
+      ]
+    }
+  ]
+}
