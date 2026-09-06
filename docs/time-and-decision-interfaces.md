@@ -67,6 +67,15 @@ explicitly: act now if the target passed but the deadline has not. Test deadline
 misses separately with a declared terminal outcome; never force an action and
 label it a model decision. Randomize request order across equivalent snapshots.
 
+Include a **never-due target** whose instructions explicitly require no action
+through the deadline. A correct polling trajectory returns WAIT at every point,
+including the final deadline check; any PLAY is a false activation. The proposed
+absolute-time and delay interfaces need an explicit no-action-by-deadline response
+for the same control. Do not require a fabricated timestamp or an infinite number.
+Score correct waiting separately from a timeout on an action that was due, and
+keep malformed responses separate from both. This control is motivated by
+SentinelBench; see the [canonical review of waiting, observation and deadlines](literature-review.md#waiting-observation-and-deadlines).
+
 The small initial comparison is three interfaces crossed with:
 
 - Seconds versus milliseconds, rescaling every relevant number, unit and grid.
@@ -81,14 +90,20 @@ comparison with the same numerical structure to distinguish general number
 handling from time-specific framing. These transformations preserve the target;
 changing the actual horizon or payoff does not and belongs in another experiment.
 
-For model-selected timing, independently sample its absolute-time choices and its
-play-now decisions across matched snapshots. If a stable policy is represented
-consistently, the probability of saying PLAY by time t should agree with the
-fraction of independently selected target times at or before t. Estimate this
-distributional agreement rather than declaring one pair of stochastic answers a
-contradiction. Also report monotonicity of the PLAY-probability curve. Independent
-snapshots can sample the full curve even after an earlier snapshot produced PLAY;
-they are counterfactual probes, not one continuing game trajectory.
+For model-selected timing, sample target times T at one fixed initial clock origin
+under unchanged task information and define F(t) = P(T <= t). Separately estimate
+q(t), the probability of answering PLAY in an independent snapshot at time t.
+These snapshots are uncensored: earlier PLAY answers do not remove later probes,
+and their prompts supply no additional evidence from prior decisions or silence.
+
+The equality q(t) = F(t) is a **testable latent-threshold hypothesis**: each
+interface represents a draw from the same target distribution and the snapshot
+answer compares that target with t. A stable policy alone does not imply this
+model. Estimate agreement and monotonicity of q(t) rather than calling one pair
+of stochastic answers a contradiction. These are counterfactual snapshot probes,
+not a continuing trajectory. In particular, q(t) is neither a cumulative
+first-action probability nor the conditional probability of acting after previous
+WAIT decisions; Stage 2 distinguishes those quantities.
 
 Primary outcomes: target error in common units, premature and overdue actions,
 representation discrepancies, and decision probability by time relative to target.
@@ -128,6 +143,33 @@ p_i, survival through n polls is the product of (1-p_i). With history-dependent
 policies, the corresponding hazards must condition on surviving prior decisions;
 stateless snapshot probabilities cannot be substituted without that assumption.
 
+The following probability calculation is our derivation for this proposed design,
+not an empirical result from the literature. For a target drawn once from F and
+retained throughout a trajectory, execute it at the first eligible grid point
+t_1 < ... < t_n. The first point is at or after the initial origin and receives
+all targets T <= t_1. Include the deadline as the final point; target mass beyond
+it remains no action by the deadline, without renormalizing F.
+
+To reproduce this target distribution using decisions conditioned on no earlier
+PLAY, the required grid hazards are:
+
+    h_1 = F(t_1)
+    h_i = [F(t_i) - F(t_(i-1))] / [1 - F(t_(i-1))], for i >= 2.
+
+The second expression applies only when 1 - F(t_(i-1)) > 0. When that denominator
+is zero, no surviving trajectory remains and its conditional hazard is undefined.
+These hazards yield P(first PLAY by t_i) = F(t_i). By contrast, independently
+sampling each snapshot's q(t_i) = F(t_i) yields:
+
+    P(first PLAY by t_n) = 1 - product_i [1 - F(t_i)].
+
+For F(t_1)=0.2 and F(t_2)=0.4, independent snapshot draws give 0.52 by the second
+poll. Retaining one target gives 0.40; its conditional hazards are 0.2 and 0.25.
+Thus, snapshot agreement can coexist with earlier action under repeated sampling.
+This difference alone is not a representation inconsistency. New information or
+history-dependent replanning can change the target distribution and hazards, so
+the fixed-F comparison must hold those influences constant.
+
 Compare observed first-action distributions with this sampling baseline and with
 deterministic threshold agents. Include same-time repeated-query controls and
 matched call-budget controls; label repeated same-time measurements as duplicate
@@ -142,6 +184,8 @@ from the same frozen public state, collect all decisions, then execute the PLAY
 set atomically with randomized tie-breaking. Update public history only after
 that batch. Never run one player's private counter ahead of the others. A never-
 PLAY trajectory ends as no action by the deadline, distinct from malformed output.
+Here every card is due, so an unplayed card is a behavioral timeout. It is not
+correct waiting of the kind measured by Stage 1's never-due control.
 
 Grid polling coarsens action times. Execute a precommitted schedule on the same
 grid by rounding each time up to its first eligible polling point, retaining both
@@ -203,13 +247,13 @@ individual timing-compliance confound remains unresolved.
 
 ## Related work
 
-[Cheng et al., *Your LLM Agents are Temporally Blind* (ACL Findings 2026)](https://aclanthology.org/2026.findings-acl.1848/)
-tests how elapsed time changes tool-use decisions and reliance on prior context.
-It is relevant to time-sensitive action, but does not supply this delay-versus-
-polling comparison. Our proposed contribution needs that narrower framing.
-
-[Bao and Srikumar, *The Machine's Internal Clock* (August 2026 preprint)](https://arxiv.org/abs/2608.15394)
-studies narrative descriptions of temporal illusions. The authors find responses
-consistent with recalling psychology findings rather than human-like temporal
-biases. This reinforces the need for behavioral controls and restrained
-interpretation, rather than asking a model to describe how waiting feels.
+The [canonical literature review](literature-review.md) records the closest
+predecessors and their limits. SentinelBench compares duration-based sleep with
+condition-based waiting under different observation and call schedules. The
+Engagement Process compares agent loops, periodic polling and event-driven
+engagement using a simulated token clock. Deadline experiments compare initial
+budgets with remaining-time updates, combining model latency and optional
+speech-rate delay; these do not isolate internal tracking from deadline salience. TicToc tests
+elapsed-context judgments about tool use. Our proposed contribution is the
+controlled comparison of timing representations and decision interfaces, with
+observation, sampling and computation differences measured explicitly.

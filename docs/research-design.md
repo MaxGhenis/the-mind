@@ -166,20 +166,25 @@ can still be useful; a model leaderboard alone is a weak research contribution.
 
 ## Related work and limits to novelty
 
-- [Agashe et al., LLM-Coordination, NAACL 2025](https://aclanthology.org/2025.findings-naacl.448/)
-  evaluates four coordination games and partner reasoning, including unseen
-  partners. This project is not the first LLM coordination benchmark.
-- [Hayler et al., Zero-Shot Coordination Among LLM Agents, 2026](https://openreview.net/pdf?id=HHPbQlyA7Y)
-  examines minimal coordination settings. Small games alone are not a novelty claim.
-- [Buscemi et al., When Numbers Start Talking, 2026](https://arxiv.org/html/2601.03846v2)
-  studies explicitly instructed numerical communication in strategic games.
-  Numerical outputs do not establish spontaneous covert signaling.
-- [Ashery et al., Emergent social conventions and collective bias in LLM populations](https://arxiv.org/abs/2410.08948)
-  studies decentralized convention formation in naming games.
-- [Barrie and Törnberg, Emergent LLM behaviors are observationally equivalent to data leakage](https://arxiv.org/abs/2505.23796)
-  raises the alternative explanation of recalled training patterns. This is a
-  methodological critique, not proof that any particular result here is leakage.
+Bryan Bischof's [Mind Agents software (2025)](https://github.com/BBischof/mindAgents/tree/bb11928fd907887ac41a38670d078f556480d15e)
+is a direct LLM–The Mind precedent. It ranks proposed waits independently of
+provider latency and replans after each play, without an accumulated virtual
+clock. The review distinguishes this software from published studies.
 
-The prospective contribution is a transparent identification strategy for
-**convention compatibility and its sensitivity to observable timing**, with a
-fully auditable small environment. Novelty and publication value remain open.
+The [literature review](literature-review.md) records sources, publication status,
+read depth, and design implications. Cross-play and minimal LLM coordination
+settings already appear in LLM-Coordination and Hayler et al.; Other-Play provides
+an earlier distinction between self-play performance and compatibility with new
+partners. SentinelBench and the Engagement Process also study time-sensitive
+decision interfaces. Buscemi et al.'s numerical messages differ from action
+timing, while naming-game results and the accompanying contamination critique
+caution against interpreting shared strategies as newly learned conventions.
+
+The candidate contribution is a **paired mechanism study of convention
+compatibility across time representations and decision interfaces**. Credible
+comparisons must match available information, clock origin and units, decision
+opportunities, and inference budgets, while accounting for informative silence
+and repeated sampling. The proposed extensions would test whether effects survive
+these controls and strong algorithmic baselines. Small games, numerical outputs,
+and clock-aware interfaces alone do not establish novelty; publication value
+remains conditional on those results.

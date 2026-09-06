@@ -9,7 +9,8 @@ algorithmic controls.
 **Revival status:** the previous paper's findings are not validated. The rebuild
 is an exploratory instrument, not evidence of theory of mind or dangerous agent
 coordination. [Research design](docs/research-design.md) ·
-[Legacy audit](docs/legacy-audit.md) · [Pilot status](docs/pilot.md)
+[Literature review](docs/literature-review.md) · [Legacy audit](docs/legacy-audit.md) ·
+[Pilot status](docs/pilot.md)
 
 The next proposed study compares [choosing a wait with deciding when to act](docs/time-and-decision-interfaces.md),
 including timing compliance, clock representations and polling-frequency controls.
