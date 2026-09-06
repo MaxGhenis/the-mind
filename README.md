@@ -11,6 +11,10 @@ is an exploratory instrument, not evidence of theory of mind or dangerous agent
 coordination. [Research design](docs/research-design.md) ·
 [Legacy audit](docs/legacy-audit.md) · [Pilot status](docs/pilot.md)
 
+The next proposed study compares [choosing a wait with deciding when to act](docs/time-and-decision-interfaces.md),
+including timing compliance, clock representations and polling-frequency controls.
+Regular PLAY/WAIT polling is a design extension, not an implemented benchmark mode.
+
 The [Hugging Face investigation](https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/)
 makes questions about agent coordination channels pertinent. Its agents exchanged
 messages through shared infrastructure; that incident does not demonstrate

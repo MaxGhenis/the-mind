@@ -1,6 +1,6 @@
 # The Mind: convention compatibility in numerical coordination
 
-Design revision: September 5, 2026. Status: exploratory instrument and pilot protocol,
+Design revision: September 6, 2026. Status: exploratory instrument and pilot protocol,
 **not a preregistration and not a completed capability study**.
 
 ## Decision
@@ -133,6 +133,14 @@ hashes are retained. No completion cache or silent retry reuses a model response
 across independent calls.
 
 ## Next confirmatory study, conditional on instrument validation
+
+The next gate now includes [time representations and decision interfaces](time-and-decision-interfaces.md):
+first test individual numerical compliance, then whether choosing an absolute
+time, choosing a remaining delay, and answering repeated PLAY/WAIT queries
+produce compatible policies. Regular polling during silence is not implemented
+in the current engine. The extension specifies controls for unit conversions,
+clock origins, repeated-sampling hazards, memory, call budgets and informative
+silence. This stage precedes expanding the cross-play matrix.
 
 Before expanding spend, freeze code and prompts, separate tuning seeds from held
 out seeds, choose a primary contrast and minimum effect of interest, and simulate
