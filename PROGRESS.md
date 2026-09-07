@@ -2,18 +2,20 @@
 
 ## State
 
-Offline implementation is complete, committed in coherent steps and validated in
-`/Users/maxghenis/the-mind-stage1-20260907`, branch
-`sprint/stage1-timing-20260907`. Final executable source is commit `0b5d594`;
-subsequent changes retain evidence/documentation and add CI evidence verification. No Stage 1 model collection,
-paid compute, usage resets, publication or merge occurred.
+Resumed the exact isolated continuation at `b829dc5` to repair the host review's
+single P2: derived-score finalization cannot recover after a write/seal interruption.
+The original checkout and earlier history remain untouched. The immutable retained
+evidence still records source `0b5d594`; it will not be regenerated for this repair.
 
-The continuation begins at PR2's locally verified `8860756` (also the cached
-`origin/revival/controlled-coordination`). Cached `origin/main` `cf8ec35` is an
-ancestor. Live git fetch/PR reads failed with DNS/network errors, including the
-final fetch attempt. Current remote head/base are **not** represented as verified.
-The original `the-mind-revival` checkout remains clean and untouched. No draft PR
-has been created remotely; a title/body and git bundle are prepared in lane output.
+Live fetch on September 7 now confirms PR2 is MaxGhenis's OPEN/DRAFT PR from
+`revival/controlled-coordination` at `8860756`, based on `main` at `cf8ec35`.
+Both heads are ancestors of this continuation; no base integration is required.
+Receipt: lane output `resume-pr2.json`. No draft implementation PR exists yet.
+
+The independent host review completed at `b829dc5`; its only actionable finding
+is the interrupted-finalization P2, reproduced locally before repair. The
+coordinator will supply a focused rereview once `REVIEW-READY.md` identifies the
+repair head. No nested review will be launched.
 
 ## Done
 
@@ -54,13 +56,13 @@ has been created remotely; a title/body and git bundle are prepared in lane outp
 
 ## Next
 
-1. Restore permitted network access; verify live PR2 head/base and integrate any
-   current-base changes safely. Do not reset or overwrite an existing checkout.
-2. Complete one bounded independent semantic review of the final implementation;
-   fix actionable file/line findings and rerun the affected checks.
-3. Push this local branch and create the prepared **draft** implementation PR,
-   stacked on PR2 if it is still open; reconcile with current main if merged.
-   Do not merge or publish research. Hosted collection needs separate authorization.
+1. Make derived files atomic and regenerable for unsealed runs, leaving raw
+   evidence exclusive/immutable and sealed-run guards intact. Add recovery
+   regressions for interrupted gzip writing and interrupted manifest sealing.
+2. Run relevant tests and read-only archive verification, commit the repair, and
+   write an exact-head `REVIEW-READY.md` to the lane directory for the coordinator.
+3. After focused review passes, reverify live ownership/base, push normally and
+   create the authorized draft PR on `revival/controlled-coordination`. Never merge.
 
 Lane output and final report:
 `/Users/maxghenis/capacity-sprint-20260907/the-mind/result.md`.
