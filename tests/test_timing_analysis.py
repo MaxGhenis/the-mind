@@ -26,12 +26,14 @@ def rows_for(name, p=None, change=None):
     p = p or protocol()
     plan = build_plan(p)
     participant = descriptor(name)
+    if change:
+        participant.update(kind="external", provider="synthetic-test-fixture")
     manifest = {
         "run_id": "offline-test",
         "participant": participant,
         "participant_sha256": digest(participant),
         "protocol_sha256": digest(p),
-        "source_kind": "deterministic_offline_control",
+        "source_kind": "external_unattested_import" if change else "deterministic_offline_control",
     }
     attempts, results = [], []
     for probe in plan:

@@ -10,6 +10,7 @@ from __future__ import annotations
 import gzip
 import json
 import os
+import platform
 import time
 import uuid
 from datetime import datetime, timezone
@@ -207,6 +208,8 @@ def prepare_run(protocol, output, participant):
         "run_id": str(uuid.uuid4()),
         "status": "prepared",
         "created_at": utcnow(),
+        "python": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
         "protocol_sha256": digest(protocol),
         "participant": participant,
         "participant_sha256": digest(participant),
@@ -258,6 +261,23 @@ def load_packets(output):
     for name, expected in manifest["packet_sha256"].items():
         if sha256(checked_path(output, name)) != expected:
             raise ValueError(f"packet hash mismatch: {name}")
+    required_source = {
+        "themind/__init__.py",
+        "themind/timing.py",
+        "themind/timing_runner.py",
+        "themind/timing_controls.py",
+        "themind/timing_analysis.py",
+        "themind/stage1.py",
+        "themind/runner.py",
+        "themind/engine.py",
+        "themind/policies.py",
+        "themind/analysis.py",
+    }
+    actual_source = {"themind/" + p.name for p in (output / "source" / "themind").glob("*.py")}
+    if not required_source <= set(manifest["source_sha256"]) or actual_source != set(
+        manifest["source_sha256"]
+    ):
+        raise ValueError("source inventory is incomplete or contains untracked modules")
     for name, expected in manifest["source_sha256"].items():
         if sha256(checked_path(output / "source", name)) != expected:
             raise ValueError(f"source hash mismatch: {name}")
@@ -304,6 +324,7 @@ def result_record(attempt, response, completed_at, latency_seconds):
 def validate_records(manifest, plan, attempts, results):
     """One attempt per planned trial, no retry selection or provider substitution."""
     attempt_map = {}
+    probes_by_trial = {p["trial_id"]: p for p in plan}
     for index, attempt in enumerate(attempts):
         exact_keys(attempt, ATTEMPT_KEYS, "attempt")
         if index >= len(plan):
@@ -365,6 +386,16 @@ def validate_records(manifest, plan, attempts, results):
             "error",
         }:
             raise ValueError("finish reason contradicts success status")
+        if manifest["participant"]["kind"] == "deterministic_control":
+            # A claimed deterministic fixture is reproducible, unlike an external
+            # provider observation. Re-execute it from the request to verify the
+            # raw response as well as the derived score, even if hashes are rebuilt.
+            probe = probes_by_trial[attempt["trial_id"]]
+            expected_response = control_response(
+                manifest["participant"]["name"], probe["request"], probe["repetition"]
+            )
+            if any(result[key] != value for key, value in expected_response.items()):
+                raise ValueError("offline control result does not replay from its request")
         result_map[attempt_id] = result
     return attempt_map, result_map
 

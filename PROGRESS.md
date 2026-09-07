@@ -42,9 +42,20 @@ and `auto_reset.enabled=false` were checked and will be preserved.
 - Full verification: 184 tests and 122 subtests pass; Ruff lint and formatting pass
   across the complete package/tests. No changes to the legacy game execution.
 
+- Executed seven full-grid offline controls (38,304 synthetic responses), each
+  with complete provenance verification. Oracle: 4,464/4,464 prescribed snapshots
+  compliant, zero numeric error; all negative controls show intended signatures.
+- Strengthened verification to replay raw deterministic-control results, require
+  a complete executable-source inventory, and record the interpreter version.
+  Added a single-command seven-control validation/index/report harness.
+- Full verification now passes 187 tests and 122 subtests, plus Ruff lint/format.
+- Requested the one bounded semantic Subfleet review, pinned Axiom subscription
+  lane, run `20260907-171522-the-mind-stage1-review` at head `dc36616`. DNS/network
+  errors prevented any review. Ledger ended rc=143 at 17:23 EDT; output empty.
+  This is not an independent review or approval. No reset/overflow was used.
+
 ## Next
 
-3. Validate controls and provenance failure cases; request one bounded independent
-   semantic Subfleet review; fix actionable findings.
+3. Retain the final-source validation bundle and its verified reproduction receipt.
 4. Save reproducible artifacts and a draft PR (or exact network blocker with ready
    PR body), then write `/Users/maxghenis/capacity-sprint-20260907/the-mind/result.md`.

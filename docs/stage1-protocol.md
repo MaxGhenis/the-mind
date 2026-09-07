@@ -222,7 +222,8 @@ link evidence; they are not cryptographic proof of a provider invocation.
 
 `verify` checks source and artifact hashes, rebuilds the randomized plan, validates
 the attempt/result relation, reparses raw text, and recomputes every score and the
-report. An incomplete run can be explicitly sealed with `finalize-partial`; missing
+report. For declared offline controls it also re-executes the deterministic
+responder from each rendered request and compares the raw result fields. An incomplete run can be explicitly sealed with `finalize-partial`; missing
 results and unattempted trials remain distinct, and the manifest stays incomplete.
 There is no resume/retry mechanism that could select favorable responses.
 
@@ -242,3 +243,19 @@ IDs, settings, provider-native schema adapter, actual token/call budget and sour
 revision. Native schema support is not claimed by this provider-neutral packet.
 Do not reuse the earlier pilot responses or count the development/review agents
 as experimental participants. No cross-play or Stage 2/3 collection is included.
+
+Reproduce the seven full-grid positive/numerical/decision controls and their
+asserted signatures with one command (38,304 deterministic responses):
+
+```sh
+python3 -m themind.timing_validation run \
+  --protocol experiments/stage1-pilot.json --out runs/stage1-validation
+python3 -m themind.timing_validation verify --run runs/stage1-validation
+```
+
+The validation index hashes all seven manifests, requires identical executable
+source hashes across controls, and recomputes its aggregate report and signature
+checks from each verified run. Different run IDs and wall-clock latency records
+are expected on reproduction; frozen request bytes and deterministic outcomes
+are reproducible. The source snapshot and interpreter version identify the
+implementation used for the retained evidence.

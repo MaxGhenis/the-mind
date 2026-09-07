@@ -307,3 +307,29 @@ def test_hashes_link_identical_prompts_to_distinct_replicate_attempts(tmp_path):
         {attempt_record(manifest, r, "2026-09-07T20:00:00Z")["attempt_id"] for r in repeated}
     ) == len(repeated)
     assert manifest["participant_sha256"] == digest(external())
+
+
+def test_claimed_offline_control_raw_result_must_replay_even_after_rehashing(tmp_path):
+    from themind.runner import sha256
+
+    output = tmp_path / "run"
+    run_control(small_protocol(), output, "oracle")
+    original = read_chain(output / "results.jsonl")
+    original[0]["raw_text"] = '{"play":true}'
+    original[0]["raw_response"] = '{"forged":true}'
+    write_chain(output / "results.jsonl", original)
+    manifest = json.loads((output / "manifest.json").read_text())
+    manifest["artifact_sha256"]["results.jsonl"] = sha256(output / "results.jsonl")
+    (output / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="does not replay"):
+        verify_run(output)
+
+
+def test_source_hash_inventory_cannot_omit_an_executable_module(tmp_path):
+    output = tmp_path / "run"
+    prepare_run(small_protocol(), output, external())
+    manifest = json.loads((output / "manifest.json").read_text())
+    manifest["source_sha256"].pop("themind/timing_analysis.py")
+    (output / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="source inventory"):
+        load_packets(output)
