@@ -223,9 +223,17 @@ link evidence; they are not cryptographic proof of a provider invocation.
 `verify` checks source and artifact hashes, rebuilds the randomized plan, validates
 the attempt/result relation, reparses raw text, and recomputes every score and the
 report. For declared offline controls it also re-executes the deterministic
-responder from each rendered request and compares the raw result fields. An incomplete run can be explicitly sealed with `finalize-partial`; missing
-results and unattempted trials remain distinct, and the manifest stays incomplete.
-There is no resume/retry mechanism that could select favorable responses.
+responder from each rendered request and compares the raw result fields. An
+incomplete run can be explicitly sealed with `finalize-partial`; missing results
+and unattempted trials remain distinct, and the manifest stays incomplete.
+
+Before sealing, finalization can safely regenerate derived scores, summary and
+report after an interruption. Each derived file replaces its predecessor atomically
+only after writing completes; a leftover temporary cannot block a retry. This
+recovery reads the same immutable packets and attempt/result ledgers and makes no
+new requests. Complete and incomplete seals both prohibit derived overwrites.
+There is no response collection resume/retry mechanism that could select favorable
+responses.
 
 An external adapter is deliberately not included. `prepare --participant FILE`
 exports a packet for later authorized collection; `import` accepts that collector's

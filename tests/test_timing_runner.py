@@ -333,3 +333,113 @@ def test_source_hash_inventory_cannot_omit_an_executable_module(tmp_path):
     (output / "manifest.json").write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="source inventory"):
         load_packets(output)
+
+
+@pytest.mark.parametrize("interruption", ["gzip_write", "manifest_seal"])
+@pytest.mark.parametrize("partial", [False, True])
+@pytest.mark.parametrize("existing_score", [False, True])
+def test_interrupted_finalization_retries_without_changing_raw_evidence(
+    tmp_path, interruption, partial, existing_score
+):
+    import gzip
+
+    from themind.timing_runner import read_jsonl, write_json
+
+    output = tmp_path / "unsealed"
+    manifest, plan = prepare_run(small_protocol(), output, external())
+    attempts, results = records(manifest, plan)
+    if partial:
+        attempts, results = attempts[:3], results[:2]
+    write_chain(output / "attempts.jsonl", attempts)
+    write_chain(output / "results.jsonl", results)
+    manifest["status"] = "aborted" if partial else "running"
+    write_json(output / "manifest.json", manifest)
+    before_manifest = (output / "manifest.json").read_bytes()
+    raw_names = (
+        "attempts.jsonl",
+        "results.jsonl",
+        "protocol.json",
+        "design.jsonl.gz",
+        "requests.jsonl.gz",
+    )
+    raw_bytes = {name: (output / name).read_bytes() for name in raw_names}
+    score = output / "scored.jsonl.gz"
+    old_score = b"\x1f\x8b\x08previous interrupted score"
+    if existing_score:
+        score.write_bytes(old_score)
+    # A SIGKILL may leave a temporary that normal exception cleanup cannot remove.
+    stale_temporary = output / ".scored.jsonl.gz.orphan.tmp"
+    stale_temporary.write_bytes(b"previous temporary fragment")
+    gzip_write = gzip.GzipFile.write
+    reached_interruption = []
+
+    def interrupt_gzip(zipped, data):
+        written = gzip_write(zipped, data)
+        if "scored.jsonl.gz" in Path(zipped.fileobj.name).name:
+            zipped.flush()
+            reached_interruption.append(True)
+            raise OSError("injected interruption during score gzip writing")
+        return written
+
+    def interrupt_seal(path, value):
+        if path.name == "manifest.json" and value.get("status") in {"complete", "incomplete"}:
+            # The completed score exists, but the durable manifest is still unsealed.
+            assert len(list(read_jsonl(score))) == len(plan)
+            reached_interruption.append(True)
+            raise OSError("injected interruption before manifest seal")
+        return write_json(path, value)
+
+    failure = (
+        patch("themind.timing_runner.gzip.GzipFile.write", new=interrupt_gzip)
+        if interruption == "gzip_write"
+        else patch("themind.timing_runner.write_json", side_effect=interrupt_seal)
+    )
+    with failure, pytest.raises(OSError, match="injected interruption"):
+        finalize_run(output, allow_partial=partial)
+    assert reached_interruption == [True]
+    assert (output / "manifest.json").read_bytes() == before_manifest
+    assert {name: (output / name).read_bytes() for name in raw_names} == raw_bytes
+    if interruption == "gzip_write":
+        if existing_score:
+            assert score.read_bytes() == old_score  # no partial replacement exposed
+        else:
+            assert not score.exists()
+    assert set(output.glob(".scored.jsonl.gz.*.tmp")) == {stale_temporary}
+
+    summary = finalize_run(output, allow_partial=partial)
+    assert verify_run(output) == summary
+    assert {name: (output / name).read_bytes() for name in raw_names} == raw_bytes
+    sealed = json.loads((output / "manifest.json").read_text())
+    assert sealed["status"] == ("incomplete" if partial else "complete")
+    assert sealed["attempts"] == len(attempts)
+    assert sealed["results"] == len(results)
+    assert stale_temporary.read_bytes() == b"previous temporary fragment"
+
+    # Both complete and explicitly incomplete seals prohibit all derived rewriting.
+    sealed_names = (*raw_names, "scored.jsonl.gz", "summary.json", "report.md", "manifest.json")
+    sealed_bytes = {name: (output / name).read_bytes() for name in sealed_names}
+    with patch("themind.timing_runner._atomic_derived_file") as writer:
+        with pytest.raises(ValueError, match="sealed runs"):
+            finalize_run(output, allow_partial=True)
+        writer.assert_not_called()
+    assert {name: (output / name).read_bytes() for name in sealed_names} == sealed_bytes
+
+
+def test_raw_packet_and_journal_creation_stays_exclusive(tmp_path):
+    from themind.timing_runner import write_jsonl_gz
+
+    packet = tmp_path / "requests.jsonl.gz"
+    write_jsonl_gz(packet, [{"request": "original"}])
+    before = packet.read_bytes()
+    with pytest.raises(FileExistsError):
+        write_jsonl_gz(packet, [{"request": "replacement"}])
+    assert packet.read_bytes() == before
+
+    path = tmp_path / "attempts.jsonl"
+    journal = Journal(path)
+    journal.append({"attempt": "original"})
+    journal.close()
+    before = path.read_bytes()
+    with pytest.raises(FileExistsError):
+        Journal(path)
+    assert path.read_bytes() == before

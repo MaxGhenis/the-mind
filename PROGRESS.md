@@ -2,8 +2,8 @@
 
 ## State
 
-Resumed the exact isolated continuation at `b829dc5` to repair the host review's
-single P2: derived-score finalization cannot recover after a write/seal interruption.
+Repaired the host review's single P2 in the exact continuation from `b829dc5`:
+derived finalization now recovers after a write/seal interruption while unsealed.
 The original checkout and earlier history remain untouched. The immutable retained
 evidence still records source `0b5d594`; it will not be regenerated for this repair.
 
@@ -13,7 +13,7 @@ Both heads are ancestors of this continuation; no base integration is required.
 Receipt: lane output `resume-pr2.json`. No draft implementation PR exists yet.
 
 The independent host review completed at `b829dc5`; its only actionable finding
-is the interrupted-finalization P2, reproduced locally before repair. The
+was the interrupted-finalization P2, reproduced locally before repair. The
 coordinator will supply a focused rereview once `REVIEW-READY.md` identifies the
 repair head. No nested review will be launched.
 
@@ -35,7 +35,7 @@ repair head. No nested review will be launched.
   all-attempt/valid-only denominators. No trajectory, power or capability claims.
 - Froze the 5,472-request exploratory pilot with a 6,000 per-participant cap, case
   split, seed, primary contrast and 10-point planning effect; collection unauthorized.
-- Full checks pass: **187 tests and 122 subtests**, Ruff lint and formatting.
+- Full checks pass: **196 tests and 122 subtests**, Ruff lint and formatting.
   The existing 800-round offline CI baseline also passes all shared-convention
   assertions. Added archived-source evidence verification to the CI Python matrix.
 - Retained **38,304 synthetic responses** across seven full-grid controls;
@@ -50,18 +50,25 @@ repair head. No nested review will be launched.
 - Requested the single bounded semantic Subfleet review on the pinned Axiom
   subscription lane: `20260907-171522-the-mind-stage1-review`, head `dc36616`.
   DNS/network errors prevented a review; ledger ended rc=143 at 17:23 EDT with
-  empty output. **No independent findings or approval exist.**
+  empty output. This initial attempt was superseded by the completed host review
+  at `b829dc5`, which found only the interrupted-finalization P2.
+- Repaired that P2 with atomic replacement of derived scores, summary and report
+  for unsealed runs only. Eight interruption regressions cover gzip writing and
+  manifest sealing, complete/partial runs, and old truncated scores; all retry and
+  verify with byte-identical raw evidence and preserved sealed-run guards. Raw
+  packet/journal creation still rejects overwrites. The 52-test runner suite and
+  unchanged host reproduction pass; the latter now retries successfully.
+- Read-only verification with the repaired code confirms all 38,304 retained
+  synthetic responses and 22 checks. Archive SHA-256 remains
+  `54efd2514db52ef4d607218e9e394ad8f764e2633a4823800a0b4230bb6c6bae`.
 - Preserved `auto_reset.enabled=false` and the sprint no-reset marker. No messages
   to other people, hosted collection, paid overflow, reset requests or merges.
 
 ## Next
 
-1. Make derived files atomic and regenerable for unsealed runs, leaving raw
-   evidence exclusive/immutable and sealed-run guards intact. Add recovery
-   regressions for interrupted gzip writing and interrupted manifest sealing.
-2. Run relevant tests and read-only archive verification, commit the repair, and
-   write an exact-head `REVIEW-READY.md` to the lane directory for the coordinator.
-3. After focused review passes, reverify live ownership/base, push normally and
+1. Write an exact-head `REVIEW-READY.md` to the lane directory for the coordinator's
+   focused rereview. Address actionable findings before delivery.
+2. After focused review passes, reverify live ownership/base, push normally and
    create the authorized draft PR on `revival/controlled-coordination`. Never merge.
 
 Lane output and final report:

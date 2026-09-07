@@ -11,8 +11,10 @@ import gzip
 import json
 import os
 import platform
+import tempfile
 import time
 import uuid
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -129,11 +131,38 @@ def validate_participant(p):
 
 
 def write_jsonl_gz(path, rows):
-    # Fixed mtime and no filename make identical packets byte reproducible.
     with path.open("xb") as stream:
-        with gzip.GzipFile(filename="", fileobj=stream, mode="wb", mtime=0) as zipped:
-            for row in rows:
-                zipped.write((canonical_json(row) + "\n").encode())
+        _write_jsonl_gz_stream(stream, rows)
+
+
+def _write_jsonl_gz_stream(stream, rows):
+    # Fixed mtime and no filename make identical packets byte reproducible.
+    with gzip.GzipFile(filename="", fileobj=stream, mode="wb", mtime=0) as zipped:
+        for row in rows:
+            zipped.write((canonical_json(row) + "\n").encode())
+
+
+@contextmanager
+def _atomic_derived_file(path):
+    """Replace a derived file only after its complete contents are durable.
+
+    Used only after finalize_run's unsealed-run guard and evidence validation.
+    A unique sibling temporary also permits retries after a hard interruption
+    leaves an old temporary behind. Raw packets and journals never use this path.
+    """
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb", dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
+        ) as stream:
+            temporary = Path(stream.name)
+            yield stream
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def read_jsonl(path):
@@ -462,9 +491,12 @@ def finalize_run(output, *, allow_partial=False):
     from themind.timing_analysis import render_report, summarize
 
     summary = summarize(rows, protocol, manifest)
-    write_json(output / "summary.json", summary)
-    (output / "report.md").write_text(render_report(summary))
-    write_jsonl_gz(output / "scored.jsonl.gz", rows)
+    with _atomic_derived_file(output / "summary.json") as stream:
+        stream.write((json.dumps(summary, indent=2, allow_nan=False) + "\n").encode())
+    with _atomic_derived_file(output / "report.md") as stream:
+        stream.write(render_report(summary).encode())
+    with _atomic_derived_file(output / "scored.jsonl.gz") as stream:
+        _write_jsonl_gz_stream(stream, rows)
     manifest.update(
         status="complete" if complete else "incomplete",
         completed_at=utcnow(),

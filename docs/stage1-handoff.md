@@ -19,41 +19,44 @@ No Stage 1 model observations have been collected, and no PR was published/merge
   [validation-bundle](../tests/test_timing_validation.py) regressions.
 - [Progress record](../PROGRESS.md) is committed from the initial worktree step.
 
-The complete suite passes **187 tests and 122 subtests**; package/tests pass Ruff
+The complete suite passes **196 tests and 122 subtests**; package/tests pass Ruff
 lint and formatting on Python 3.14. The existing 800-round offline CI baseline
 also passes all shared-convention checks. Archived-source replay/verification
 passes on Python 3.10, 3.12 and 3.14; CI now enforces the same archive checks.
 The positive oracle complies on 4,464/4,464 prescribed
 snapshots, with zero numeric error and complete representation agreement. The
 retained evidence was generated from clean implementation commit `0b5d594`; later
-commits package evidence, handoff documentation and CI verification of that evidence. These counts establish
-software behavior, not model capabilities or statistical power.
+commits package evidence, handoff documentation and CI verification, and repair
+interrupted derived-file finalization. The retained archive is unchanged and also
+passes verification with the repaired code. These counts establish software
+behavior, not model capabilities or statistical power.
 
-## Blocked external steps
+## Review and delivery state
 
-The original `the-mind-revival` checkout remains untouched. Its clean head and
-tracking reference both pointed to `8860756`; cached `origin/main` at `cf8ec35`
-is already an ancestor. Live git fetch and `gh pr view` failed because this runtime
-could not resolve/connect to GitHub. Neither the current remote PR2 head nor the
-current remote base is represented as verified. The implementation branch remains
-local; a concrete draft title/body and a git bundle are in the lane output directory.
+The original `the-mind-revival` checkout remains untouched. September 7 live fetch
+and `gh pr view` confirm MaxGhenis's PR2 is open and draft, with head
+`revival/controlled-coordination` at `8860756` and base `main` at `cf8ec35`.
+Both commits are ancestors of this continuation. The implementation branch remains
+local pending the coordinator's focused rereview.
 
-One bounded, read-only semantic Subfleet review was requested at `dc36616` on the
-pinned Axiom subscription lane: `20260907-171522-the-mind-stage1-review`.
-Address lookup and transport failures to ChatGPT prevented any review output.
-The ledger ended with code 143 at 17:23 EDT. There are no independent findings or
-approval, and the later raw-control replay/validation-bundle additions still need
-that review. The review prompt and exact blocker are retained in the lane output.
+The independent host review of exact head `b829dc5` found one P2: an interrupted
+derived-score write prevented a finalization retry. The repair writes all derived
+files through unique sibling temporaries and atomically replaces them only while
+the run is unsealed. Raw packet/ledger creation remains exclusive, and both sealed
+statuses still prohibit overwrites. Eight recovery cases cover gzip-write and
+manifest-seal interruptions, complete/partial runs, and old truncated score files;
+each retries successfully, passes `verify_run`, and preserves raw evidence bytes.
+An additional regression checks exclusive raw creation. The original host
+reproduction now succeeds. The coordinator will supply the focused rereview;
+no nested review has been launched.
 
 ## Next action
 
-Restore permitted network access, verify live PR2 head/base and integrate changes
-safely into an isolated continuation if required. Complete one bounded independent
-semantic review of the final implementation and fix actionable findings. Then push
-this branch and create a **draft** implementation PR stacked on PR2 if it remains
-open, or reconcile with current main if PR2 has merged. No merge or publication
-is authorized. The prepared title is “Implement Stage 1 timing compliance with
-offline provenance controls.”
+After the coordinator's focused rereview passes, reverify live PR2 ownership and
+head/base. Push normally and create a **draft** implementation PR stacked on
+`revival/controlled-coordination` if unchanged. No merge or publication is
+authorized. The prepared title is “Implement Stage 1 timing compliance with offline
+provenance controls.”
 
 Provider-native schema integration and any hosted data collection require a
 separately authorized model/settings/token/call budget and source revision. This
