@@ -1,0 +1,26 @@
+{
+  "version": "stage1-v1",
+  "name": "Stage 1 individual timing compliance pilot",
+  "order_seed": 20260907,
+  "repetitions": 2,
+  "free_repetitions": 12,
+  "units": ["seconds", "milliseconds", "ticks"],
+  "directions": ["elapsed", "countdown"],
+  "origins": [0, 137],
+  "frames": ["time", "magnitude"],
+  "max_requests_per_participant": 6000,
+  "cases": [
+    {"id":"interior","split":"tuning","deadline":30,"target":20,"item":2,"step":10,"kinds":["direct","computed"],"times":[0,19.5,20,20.5,30,30.5]},
+    {"id":"fractional","split":"held_out","deadline":30,"target":7.5,"item":3,"step":2.5,"kinds":["direct","computed"],"times":[7,7.5,8]},
+    {"id":"at_deadline","split":"held_out","deadline":30,"target":30,"item":3,"step":10,"kinds":["direct","computed"],"times":[29.5,30,30.5]},
+    {"id":"beyond_deadline","split":"held_out","deadline":30,"target":31,"item":null,"step":null,"kinds":["direct"],"times":[29.5,30,30.5]},
+    {"id":"never","split":"held_out","deadline":30,"target":null,"item":null,"step":null,"kinds":["never"],"times":[0,29.5,30,30.5]},
+    {"id":"free","split":"held_out","deadline":30,"target":null,"item":null,"step":null,"kinds":["free"],"times":[0,7.5,15,22.5,30]}
+  ],
+  "analysis": {
+    "primary": "Paired time-minus-magnitude external-target compliance, separately by interface and direct/computed kind; do not condition on successful numerical trials.",
+    "minimum_effect_pp": 10,
+    "inference": "descriptive_case_clustered",
+    "collection_authorized": false
+  }
+}

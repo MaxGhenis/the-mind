@@ -18,11 +18,17 @@ and `auto_reset.enabled=false` were checked and will be preserved.
 - Read global instructions, timing interface design and research design.
 - Inspected status, branches, remotes and available base; created isolated worktree.
 - Established this committed progress record before implementation.
+- Implemented canonical snapshots, transformed absolute/delay/poll requests, strict
+  action-only schemas and separate numerical/action scoring. Never-due and
+  beyond-deadline controls never force a play.
+- Added frozen candidate pilot configuration: 5,472 requests per participant,
+  including independent free-policy probes; collection remains unauthorized.
+- Validation: 68 focused tests pass; new files pass Ruff lint/format. Hand-derived
+  seconds/milliseconds/ticks and elapsed/countdown fixtures cover three origins.
+  Wrong but finite numbers remain behavioral outcomes, distinct from schema errors.
 
 ## Next
 
-1. Implement fixed equivalent snapshots and absolute/delay/poll schemas, including
-   never-due, terminal deadlines, units, countdown, clock shifts and magnitude control.
 2. Freeze bounded pilot protocol; add offline controls, exact request/result
    provenance, failure taxonomy and a report separating numerical/decision outcomes.
 3. Validate controls and provenance failure cases; request one bounded independent
