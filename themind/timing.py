@@ -50,7 +50,10 @@ def strict_json(text):
 
 
 def finite(value):
-    return type(value) in (int, float) and math.isfinite(value)
+    try:
+        return type(value) in (int, float) and math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 def exact_keys(value, keys, label):
@@ -285,7 +288,7 @@ def score_response(normalized, snapshot, interface):
         "expected_act_now": expected_now if prescribed and not terminal else None,
         "compliant": bool(correct) if prescribed else None,
         "decision_correct": bool(n["act_now"] == expected_now)
-        if prescribed and not terminal and n["act_now"] is not None
+        if prescribed and not terminal
         else None,
         "target_error_seconds": error,
         "past_schedule": in_past,

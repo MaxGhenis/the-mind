@@ -27,6 +27,14 @@ and `auto_reset.enabled=false` were checked and will be preserved.
   seconds/milliseconds/ticks and elapsed/countdown fixtures cover three origins.
   Wrong but finite numbers remain behavioral outcomes, distinct from schema errors.
 
+- Added offline request export, deterministic controls, durable hash-linked attempt
+  and result journals, strict external imports, source/packet/artifact verification,
+  and a reproducible Markdown/JSON report with case-level paired contrasts.
+- Validation: 109 timing/provenance tests pass. Failure fixtures cover refusals,
+  truncation of otherwise valid JSON, provider errors, invalid schemas, model
+  substitution, missing results, interruptions, duplicate/foreign records and
+  altered source/request/result/report artifacts. No network requests occurred.
+
 ## Next
 
 2. Freeze bounded pilot protocol; add offline controls, exact request/result
