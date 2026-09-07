@@ -1,8 +1,11 @@
 # Time representations and decision interfaces
 
-Design extension: September 6, 2026. Proposed experiments, **not implemented or
-run in the revived benchmark**. This extends the individual numerical-compliance
-gate in [the main research design](research-design.md) before scaling cross-play.
+Design extension: September 6, 2026; implementation status updated September 7.
+[Stage 1](stage1-protocol.md) now has an offline snapshot instrument, frozen pilot
+configuration and deterministic validation. **No Stage 1 model data have been
+collected.** Stages 2 and 3 remain proposed and unrun. This extends the individual
+numerical-compliance gate in [the main research design](research-design.md) before
+scaling cross-play.
 
 ## Question
 

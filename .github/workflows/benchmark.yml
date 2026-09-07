@@ -23,3 +23,20 @@ jobs:
         run: |
           python -m themind run --suite experiments/baselines.json --out runs/ci
           python -c "import json; s=json.load(open('runs/ci/summary.json')); assert all(s['conditions'][n]['completion_rate_all_attempts'] == 1 for n in ('shared', 'shared_fast', 'shared_feedback'))"
+      - name: Verify retained Stage 1 evidence using its frozen source
+        working-directory: results/stage1-offline-20260907
+        run: |
+          sha256sum -c evidence.sha256
+          stage1_archive="$RUNNER_TEMP/the-mind-stage1-evidence"
+          mkdir "$stage1_archive"
+          tar -xzf evidence.tar.gz -C "$stage1_archive"
+          python - "$stage1_archive/evidence" <<'PY'
+          import sys
+          from pathlib import Path
+          evidence = Path(sys.argv[1])
+          for report in Path("reports").rglob("*"):
+              if report.is_file():
+                  assert report.read_bytes() == (evidence / report.relative_to("reports")).read_bytes(), report
+          PY
+          cd "$stage1_archive/evidence/oracle/source"
+          python -m themind.timing_validation verify --run ../..

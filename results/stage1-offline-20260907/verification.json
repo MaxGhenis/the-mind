@@ -1,0 +1,35 @@
+{
+  "verified_at_utc": "2026-09-07T21:29:13.417262+00:00",
+  "method": "Extracted retained archive and verified all control artifacts using only its own saved oracle/source/themind implementation.",
+  "archive_sha256": "54efd2514db52ef4d607218e9e394ad8f764e2633a4823800a0b4230bb6c6bae",
+  "implementation_commit": "0b5d594c64177cde67e13e5367f288fdb3115021",
+  "protocol_sha256": "96f10e44904189eee41820806aa5ab93ae532605e9e1c7650713e3185a55ac39",
+  "controls": 7,
+  "control_responses": 38304,
+  "signature_checks_passed": 22,
+  "model_calls": 0,
+  "verification": "passed",
+  "interpreter_verification": [
+    {
+      "python": "3.10.19",
+      "controls": 7,
+      "responses": 38304,
+      "checks_passed": 22,
+      "verified": true
+    },
+    {
+      "python": "3.12.13",
+      "controls": 7,
+      "responses": 38304,
+      "checks_passed": 22,
+      "verified": true
+    },
+    {
+      "python": "3.14.4",
+      "controls": 7,
+      "responses": 38304,
+      "checks_passed": 22,
+      "verified": true
+    }
+  ]
+}

@@ -135,7 +135,9 @@ across independent calls.
 ## Next confirmatory study, conditional on instrument validation
 
 The next gate now includes [time representations and decision interfaces](time-and-decision-interfaces.md):
-first test individual numerical compliance, then whether choosing an absolute
+the [offline Stage 1 instrument and frozen protocol](stage1-protocol.md) now test
+individual numerical compliance and independent snapshots; no Stage 1 model data
+have been collected. The broader sequence asks whether choosing an absolute
 time, choosing a remaining delay, and answering repeated PLAY/WAIT queries
 produce compatible policies. Regular polling during silence is not implemented
 in the current engine. The extension specifies controls for unit conversions,

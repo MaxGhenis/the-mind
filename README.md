@@ -12,9 +12,11 @@ coordination. [Research design](docs/research-design.md) ·
 [Literature review](docs/literature-review.md) · [Legacy audit](docs/legacy-audit.md) ·
 [Pilot status](docs/pilot.md)
 
-The next proposed study compares [choosing a wait with deciding when to act](docs/time-and-decision-interfaces.md),
-including timing compliance, clock representations and polling-frequency controls.
-Regular PLAY/WAIT polling is a design extension, not an implemented benchmark mode.
+The [Stage 1 individual timing instrument](docs/stage1-protocol.md) now implements
+equivalent absolute/delay/PLAY–WAIT snapshots, transformed clocks, numerical and
+never-due controls, and offline provenance/analysis. No Stage 1 model data have
+been collected. [Sequential polling and cross-play extensions](docs/time-and-decision-interfaces.md)
+remain proposed; independent Stage 1 probes are not continuing trajectories.
 
 The [Hugging Face investigation](https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/)
 makes questions about agent coordination channels pertinent. Its agents exchanged
@@ -47,6 +49,26 @@ uv pip install --python .venv/bin/python -e '.[dev]'
 
 The original root-level Streamlit files are a historical demo and use the legacy
 `requirements.txt`. They are not involved in the rebuilt benchmark.
+
+## Individual timing compliance (offline)
+
+```sh
+python3 -m themind.stage1 inspect --protocol experiments/stage1-pilot.json
+python3 -m themind.stage1 control --protocol experiments/stage1-pilot.json \
+  --control oracle --out runs/stage1-oracle
+python3 -m themind.stage1 verify --run runs/stage1-oracle
+```
+
+The frozen pilot contains 5,472 independent requests per participant. This command
+runs a deterministic software control, makes zero model calls and produces
+`report.md`, `summary.json`, exact request packets, and separate hash-linked
+attempt/result ledgers. Other deliberate fault controls check whether the report
+separates numerical errors, timing decisions and infrastructure failures. See the
+[frozen protocol](docs/stage1-protocol.md) for outcomes, limits, artifact schemas
+and prospective external imports. Existing output directories are never reused.
+The [retained offline validation](results/stage1-offline-20260907/README.md) includes
+seven full-grid controls and a source-verifiable evidence archive;
+[handoff status](docs/stage1-handoff.md) records the remaining review/PR gates.
 
 ## Model pilot
 
