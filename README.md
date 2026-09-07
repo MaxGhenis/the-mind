@@ -66,6 +66,9 @@ attempt/result ledgers. Other deliberate fault controls check whether the report
 separates numerical errors, timing decisions and infrastructure failures. See the
 [frozen protocol](docs/stage1-protocol.md) for outcomes, limits, artifact schemas
 and prospective external imports. Existing output directories are never reused.
+The [retained offline validation](results/stage1-offline-20260907/README.md) includes
+seven full-grid controls and a source-verifiable evidence archive;
+[handoff status](docs/stage1-handoff.md) records the remaining review/PR gates.
 
 ## Model pilot
 
