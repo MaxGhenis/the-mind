@@ -1,0 +1,4 @@
+# Keep generated audit reports available without obscuring implementation review.
+results/stage1-offline-20260907/reports/** linguist-generated=true
+results/stage1-offline-20260907/validation.json linguist-generated=true
+results/stage1-offline-20260907/verification.json linguist-generated=true

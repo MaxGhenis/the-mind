@@ -43,7 +43,8 @@ has been created remotely; a title/body and git bundle are prepared in lane outp
   duplicate records, interruption, false completion and altered evidence.
 - Archived final-source evidence and verified it after extraction using its own
   saved source on Python 3.10, 3.12 and 3.14. See
-  `results/stage1-offline-20260907/` and `docs/stage1-handoff.md`.
+  `results/stage1-offline-20260907/` and `docs/stage1-handoff.md`. Generated
+  report files are marked in Git attributes to keep implementation review focused.
 - Requested the single bounded semantic Subfleet review on the pinned Axiom
   subscription lane: `20260907-171522-the-mind-stage1-review`, head `dc36616`.
   DNS/network errors prevented a review; ledger ended rc=143 at 17:23 EDT with
