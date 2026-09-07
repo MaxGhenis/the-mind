@@ -70,7 +70,9 @@ def test_oracle_run_reproduces_control_outcomes_and_verifies_all_artifacts(tmp_p
     with patch("urllib.request.urlopen", side_effect=AssertionError("network called")):
         summary = run_control(p, tmp_path / "a", "oracle")
         second = run_control(p, tmp_path / "b", "oracle")
-    assert summary == second
+    assert summary["counts"] == second["counts"]
+    assert summary["paired_contrasts"] == second["paired_contrasts"]
+    assert summary["free_policy_curves"] == second["free_policy_curves"]
     assert summary["instrument_checks"]["all_prescribed_snapshots_compliant"] is True
     assert verify_run(tmp_path / "a") == summary
     for name in ("design.jsonl.gz", "requests.jsonl.gz"):

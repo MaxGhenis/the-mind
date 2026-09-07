@@ -35,10 +35,15 @@ and `auto_reset.enabled=false` were checked and will be preserved.
   substitution, missing results, interruptions, duplicate/foreign records and
   altered source/request/result/report artifacts. No network requests occurred.
 
+- Froze the detailed pilot protocol and updated implementation-status links.
+  Added a time-framed early-poll fault control and analysis regressions separating
+  numeric, arithmetic, origin and binary-decision signatures. Free CDF tests retain
+  null/future mass and use independent uncensored q probes.
+- Full verification: 184 tests and 122 subtests pass; Ruff lint and formatting pass
+  across the complete package/tests. No changes to the legacy game execution.
+
 ## Next
 
-2. Freeze bounded pilot protocol; add offline controls, exact request/result
-   provenance, failure taxonomy and a report separating numerical/decision outcomes.
 3. Validate controls and provenance failure cases; request one bounded independent
    semantic Subfleet review; fix actionable findings.
 4. Save reproducible artifacts and a draft PR (or exact network blocker with ready

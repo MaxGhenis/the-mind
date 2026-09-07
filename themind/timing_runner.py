@@ -393,6 +393,8 @@ def derive_rows(manifest, plan, attempts, results):
         )
         row["attempt_id"] = attempt["attempt_id"] if attempt else None
         row["model_returned"] = result["model_returned"] if result else None
+        for field in ("input_tokens", "output_tokens", "latency_seconds", "finish_reason"):
+            row[field] = result[field] if result else None
         if (
             result
             and result["status"] == "success"

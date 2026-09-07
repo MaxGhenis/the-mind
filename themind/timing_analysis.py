@@ -365,6 +365,20 @@ def summarize(rows, protocol, manifest):
         "participant": manifest["participant"],
         "source_kind": manifest["source_kind"],
         "counts": counts,
+        "resource_usage": {
+            "input_tokens_known_total": sum(
+                r["input_tokens"] for r in rows if r["input_tokens"] is not None
+            ),
+            "output_tokens_known_total": sum(
+                r["output_tokens"] for r in rows if r["output_tokens"] is not None
+            ),
+            "responses_with_input_tokens": sum(r["input_tokens"] is not None for r in rows),
+            "responses_with_output_tokens": sum(r["output_tokens"] is not None for r in rows),
+            "responses_with_latency": sum(r["latency_seconds"] is not None for r in rows),
+            "latency_seconds_mean": mean(
+                [r["latency_seconds"] for r in rows if r["latency_seconds"] is not None]
+            ),
+        },
         "returned_models": dict(
             sorted(
                 Counter(

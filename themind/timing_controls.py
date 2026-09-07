@@ -15,6 +15,7 @@ CONTROLS = (
     "unit_blind",
     "origin_blind",
     "arithmetic_blind",
+    "poll_early",
     "invalid_json",
     "refusal",
     "truncated",
@@ -64,6 +65,15 @@ def control_response(name, request, repetition=0):
     else:
         selected = max(current, target)
         answer = {key: p["reference"] + sign * selected if key == "time" else selected - current}
+    if (
+        name == "poll_early"
+        and key == "play"
+        and p["unit"] in {"seconds", "milliseconds", "ticks"}
+        and current <= horizon
+    ):
+        answer = {
+            key: target is not None and target <= horizon and current >= target - horizon / 60
+        }
     if name == "always_wait":
         answer = {key: False if key == "play" else None}
     if name == "always_play":

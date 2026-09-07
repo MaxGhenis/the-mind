@@ -300,7 +300,9 @@ def score_response(normalized, snapshot, interface):
         "wait_when_due": bool(expected_now and n["kind"] in {"wait", "no_action"})
         if prescribed and not terminal
         else None,
-        "false_activation": bool(time is not None) if expectation == "no_action" else None,
+        "false_activation": bool(time is not None and not in_past and not after_deadline)
+        if expectation == "no_action"
+        else None,
         "correct_wait": bool(correct) if expectation == "no_action" else None,
     }
 
